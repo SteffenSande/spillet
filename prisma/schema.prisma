@@ -1,0 +1,64 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model games {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  maxGuesses  Int
+  teams       teams[]
+}
+
+model teams {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  gamesId     Int
+  games       games   @relation(fields: [gamesId], references: [id])
+  Alias       Alias[]
+}
+
+model Alias {
+  id          Int            @id @default(autoincrement())
+  externalId  String         @unique @default(uuid())
+  name        String
+  description String?
+  teams       teams          @relation(fields: [teamsId], references: [id])
+  teamsId     Int
+  CodesGuess  CodesGuess[]
+  guessesMade AliasGuesses[] @relation("guess")
+  guesses     AliasGuesses[] @relation("guesser")
+}
+
+model AliasGuesses {
+  id        Int   @id @default(autoincrement())
+  guess     Alias @relation(name: "guess", fields: [aliasId], references: [id])
+  aliasId   Int
+  guesserId Int
+  guesser   Alias @relation(name: "guesser", fields: [guesserId], references: [id])
+}
+
+model Codes {
+  id         Int          @id @default(autoincrement())
+  code       String
+  CodesGuess CodesGuess[]
+  externalId String       @unique @default(uuid())
+  hint       String
+}
+
+model CodesGuess {
+  id        Int     @id @default(autoincrement())
+  code      Codes   @relation(fields: [codesId], references: [id])
+  codesId   Int
+  alias     Alias   @relation(fields: [aliasId], references: [id])
+  aliasId   Int
+  isCorrect Boolean
+}

@@ -1,0 +1,16 @@
+{
+  "cSpell.words": ["nanostores"],
+  "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
+  "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
+  "sqltools.connections": [
+    {
+      "connectionMethod": "VS Code Extension (beta)",
+      "catalog": "workspace",
+      "previewLimit": 50,
+      "driver": "Databricks",
+      "name": "specly",
+      "path": "/sql/1.0/warehouses/fe66df9d33fcc957",
+      "schema": "specly"
+    }
+  ]
+}

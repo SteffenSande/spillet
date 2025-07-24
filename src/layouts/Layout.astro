@@ -1,0 +1,25 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <ClientRouter />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>SpecLy</title>
+    <script>
+      import { scan } from "react-scan";
+
+      scan({
+        enabled: false,
+      });
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

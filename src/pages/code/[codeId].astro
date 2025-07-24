@@ -1,0 +1,38 @@
+---
+// server
+import Code from "../../components/Code";
+import Layout from "../../layouts/Layout.astro";
+import prisma from "../../lib/prisma";
+const { codeId } = Astro.params;
+let codeModel: { id: number; externalId: string; hint?: string } | undefined;
+const user = Astro.cookies.get("session")?.value;
+
+if (codeId) {
+  const temp = await prisma.codes.findFirst({
+    where: {
+      externalId: codeId,
+    },
+  });
+
+  if (temp) {
+    const hasCorrectAnswer = await prisma.codesGuess.findFirst({
+      where: {
+        codesId: temp.id,
+        isCorrect: true,
+        alias: {
+          externalId: user,
+        },
+      },
+    });
+    codeModel = {
+      externalId: temp.externalId,
+      id: temp.id,
+      hint: hasCorrectAnswer?.isCorrect ? temp.hint : undefined,
+    };
+  }
+}
+---
+
+<Layout>
+  <Code code={codeModel} client:only />
+</Layout>

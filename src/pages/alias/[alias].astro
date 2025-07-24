@@ -1,0 +1,27 @@
+---
+// server
+import Profile from "../../components/Alias";
+import Layout from "../../layouts/Layout.astro";
+import prisma from "../../lib/prisma";
+const { alias } = Astro.params;
+let you;
+
+if (alias) {
+  const temp = await prisma.alias.findFirst({
+    where: {
+      externalId: alias,
+    },
+  });
+  if (temp) {
+    you = temp;
+    Astro.cookies.set("session", you.externalId, {
+      path: "/",
+    });
+  }
+}
+Astro.cookies.set;
+---
+
+<Layout>
+  <Profile alias={you} client:load />
+</Layout>
