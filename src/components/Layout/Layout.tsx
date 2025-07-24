@@ -28,11 +28,12 @@ const Layout: React.FunctionComponent<IProps> = ({ children }) => {
   return <QueryClientProvider
     client={getQueryClient()}
   >
-
-    {children}
+    <div className='flex justify-center items-center flex-col h-[100vh] w-full gap-4'>
+      {children}
+    </div>
 
     <HintToast />
-  </QueryClientProvider>
+  </QueryClientProvider >
 };
 
 export default Layout;

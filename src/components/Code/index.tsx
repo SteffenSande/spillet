@@ -10,6 +10,8 @@ export interface IProps {
     id: number,
     externalId: string,
     hint?: string
+    assignment: string
+    length: number
   }
 }
 
@@ -27,6 +29,7 @@ const Code: React.FunctionComponent<IProps> = ({ code }) => {
   }
 
   return <Layout>
+    <p className="text-2xl">Hint: {code.assignment}</p>
     <VerificationInput length={4} onChange={(value) => {
       setValue(value)
     }} />

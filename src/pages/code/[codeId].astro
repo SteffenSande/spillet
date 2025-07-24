@@ -4,7 +4,15 @@ import Code from "../../components/Code";
 import Layout from "../../layouts/Layout.astro";
 import prisma from "../../lib/prisma";
 const { codeId } = Astro.params;
-let codeModel: { id: number; externalId: string; hint?: string } | undefined;
+let codeModel:
+  | {
+      id: number;
+      externalId: string;
+      hint?: string;
+      length: number;
+      assignment: string;
+    }
+  | undefined;
 const user = Astro.cookies.get("session")?.value;
 
 if (codeId) {
@@ -28,6 +36,8 @@ if (codeId) {
       externalId: temp.externalId,
       id: temp.id,
       hint: hasCorrectAnswer?.isCorrect ? temp.hint : undefined,
+      length: temp.code.length,
+      assignment: temp.assignment,
     };
   }
 }

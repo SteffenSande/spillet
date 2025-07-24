@@ -2,8 +2,24 @@
 // server
 import Home from "../components/Home";
 import Layout from "../layouts/Layout.astro";
+import prisma from "../lib/prisma";
+
+const codes = await prisma.codes.findMany();
+const alias = await prisma.alias.findMany();
 ---
 
 <Layout>
-  <Home client:load />
+  <Home
+    codes={codes?.map((code) => {
+      return {
+        externalId: code.externalId,
+      };
+    }) || []}
+    alias={alias?.map((item) => {
+      return {
+        externalId: item.externalId,
+      };
+    }) || []}
+    client:load
+  />
 </Layout>

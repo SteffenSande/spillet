@@ -57,6 +57,7 @@ export async function main() {
     data: {
       code: "1234",
       hint: "Det er bak dører som ikke bare er dører og under, men samtidig oppi",
+      assignment: "Svaret er 1234",
     },
   });
 }

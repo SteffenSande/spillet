@@ -52,6 +52,7 @@ model Codes {
   CodesGuess CodesGuess[]
   externalId String       @unique @default(uuid())
   hint       String
+  assignment String
 }
 
 model CodesGuess {
