@@ -15,17 +15,17 @@ let codeModel:
   | undefined;
 const user = Astro.cookies.get("session")?.value;
 
-if (codeId) {
-  const temp = await prisma.codes.findFirst({
+if (codeId && user) {
+  const code = await prisma.codes.findFirst({
     where: {
       externalId: codeId,
     },
   });
 
-  if (temp) {
+  if (code) {
     const hasCorrectAnswer = await prisma.codesGuess.findFirst({
       where: {
-        codesId: temp.id,
+        codesId: code.id,
         isCorrect: true,
         alias: {
           externalId: user,
@@ -33,12 +33,36 @@ if (codeId) {
       },
     });
     codeModel = {
-      externalId: temp.externalId,
-      id: temp.id,
-      hint: hasCorrectAnswer?.isCorrect ? temp.hint : undefined,
-      length: temp.code.length,
-      assignment: temp.assignment,
+      externalId: code.externalId,
+      id: code.id,
+      hint: hasCorrectAnswer?.isCorrect ? code.hint : undefined,
+      length: code.code.length,
+      assignment: code.assignment,
     };
+    if (!hasCorrectAnswer) {
+      const alias = await prisma.alias.findUnique({
+        where: { externalId: user },
+      });
+
+      console.log(code);
+      console.log(alias);
+
+      if (
+        !(await prisma.codeFound.findFirst({
+          where: {
+            aliasId: alias.id,
+            codesId: code.id,
+          },
+        }))
+      ) {
+        await prisma.codeFound.create({
+          data: {
+            aliasId: alias.id,
+            codesId: code.id,
+          },
+        });
+      }
+    }
   }
 }
 ---

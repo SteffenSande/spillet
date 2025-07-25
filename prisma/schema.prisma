@@ -27,15 +27,17 @@ model teams {
 }
 
 model Alias {
-  id          Int            @id @default(autoincrement())
-  externalId  String         @unique @default(uuid())
-  name        String
-  description String?
-  teams       teams          @relation(fields: [teamsId], references: [id])
-  teamsId     Int
-  CodesGuess  CodesGuess[]
-  guessesMade AliasGuesses[] @relation("guess")
-  guesses     AliasGuesses[] @relation("guesser")
+  id                Int            @id @default(autoincrement())
+  externalId        String         @unique @default(uuid())
+  name              String
+  description       String?
+  hiddenDescription String?
+  teams             teams          @relation(fields: [teamsId], references: [id])
+  teamsId           Int
+  CodesGuess        CodesGuess[]
+  guessesMade       AliasGuesses[] @relation("guess")
+  guesses           AliasGuesses[] @relation("guesser")
+  CodeFound         CodeFound[]
 }
 
 model AliasGuesses {
@@ -53,6 +55,15 @@ model Codes {
   externalId String       @unique @default(uuid())
   hint       String
   assignment String
+  CodeFound  CodeFound[]
+}
+
+model CodeFound {
+  id      Int   @id @default(autoincrement())
+  code    Codes @relation(fields: [codesId], references: [id])
+  codesId Int
+  alias   Alias @relation(fields: [aliasId], references: [id])
+  aliasId Int
 }
 
 model CodesGuess {
@@ -61,5 +72,6 @@ model CodesGuess {
   codesId   Int
   alias     Alias   @relation(fields: [aliasId], references: [id])
   aliasId   Int
+  count     Int     @default(0)
   isCorrect Boolean
 }

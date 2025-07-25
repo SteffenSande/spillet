@@ -28,7 +28,7 @@ const Layout: React.FunctionComponent<IProps> = ({ children }) => {
   return <QueryClientProvider
     client={getQueryClient()}
   >
-    <div className='flex justify-center items-center flex-col h-[100vh] w-full gap-4'>
+    <div className='p-4 flex items-center flex-col h-[100dvh] w-full gap-4'>
       {children}
     </div>
 

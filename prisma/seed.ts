@@ -42,6 +42,7 @@ export async function main() {
     data: {
       name: "Knutemannen",
       description: "Han kan alle knutene",
+      hiddenDescription: "Han kan alle knutene",
       teamsId: destroyers.id,
     },
   });
@@ -49,11 +50,26 @@ export async function main() {
     data: {
       name: "damen",
       description: "generisk dame",
+      hiddenDescription: "generisk dame",
       teamsId: teite.id,
     },
   });
 
   const hint = await prisma.codes.create({
+    data: {
+      code: "1234",
+      hint: "Det er bak dører som ikke bare er dører og under, men samtidig oppi",
+      assignment: "Svaret er 1234",
+    },
+  });
+  const hint2 = await prisma.codes.create({
+    data: {
+      code: "1234",
+      hint: "Det er bak dører som ikke bare er dører og under, men samtidig oppi",
+      assignment: "Svaret er 1234",
+    },
+  });
+  const hint3 = await prisma.codes.create({
     data: {
       code: "1234",
       hint: "Det er bak dører som ikke bare er dører og under, men samtidig oppi",
