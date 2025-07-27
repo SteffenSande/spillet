@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import type { Code, User } from "./types";
+import type { Code, PublicUser, Team, User } from "./types";
 
 export const getUserWithAllCodes = async (
   aliasId: string
@@ -26,6 +26,88 @@ export const getUserWithAllCodes = async (
   };
 
   return user;
+};
+
+export const getTeams = async (aliasId: string): Promise<Team[]> => {
+  // Fetch all guesses made by this alias
+  const game = await prisma.games.findFirstOrThrow({
+    where: {
+      teams: {
+        some: {
+          Alias: {
+            some: {
+              externalId: aliasId,
+            },
+          },
+        },
+      },
+    },
+    include: {
+      teams: true,
+    },
+  });
+
+  return game.teams.map((team) => {
+    return {
+      id: team.id,
+      name: team.name,
+    };
+  });
+};
+
+export const getPublicUsers = async (
+  aliasId: string
+): Promise<PublicUser[]> => {
+  // Fetch all guesses made by this alias
+  const game = await prisma.games.findFirstOrThrow({
+    where: {
+      teams: {
+        some: {
+          Alias: {
+            some: {
+              externalId: aliasId,
+            },
+          },
+        },
+      },
+    },
+    include: {
+      teams: {
+        include: {
+          Alias: true,
+        },
+      },
+    },
+  });
+  const guesses = await prisma.aliasGuesses.findMany({
+    where: {
+      guesser: {
+        externalId: aliasId,
+      },
+    },
+  });
+
+  const guessesMap = new Map<number, boolean>();
+  for (const guess of guesses) {
+    guessesMap.set(guess.aliasId, true);
+  }
+
+  const aliases: PublicUser[] = game.teams
+    .map((team) => team.Alias)
+    .reduce((acc, item) => {
+      return [...acc, ...item];
+    }, [])
+    .map((alias) => {
+      return {
+        id: alias.id,
+        description: alias.description || "",
+        isAlive: alias.alive,
+        name: alias.name,
+        alreadyVotedFor: guessesMap.has(alias.id),
+      };
+    });
+
+  return aliases;
 };
 
 export const getCodesForUser = async (aliasId: string): Promise<Code[]> => {
@@ -88,4 +170,40 @@ export const getCodesForUser = async (aliasId: string): Promise<Code[]> => {
     };
   });
   return codes;
+};
+
+export const isDead = async (user: string): Promise<Boolean> => {
+  const alias = await prisma.alias.findFirstOrThrow({
+    where: {
+      externalId: user,
+    },
+  });
+  return !alias.alive;
+};
+
+export const shouldDie = async (user: string): Promise<Boolean> => {
+  const aliasWithGame = await prisma.alias.findFirstOrThrow({
+    where: {
+      externalId: user,
+    },
+    include: {
+      guesses: true,
+      teams: {
+        include: {
+          games: true,
+        },
+      },
+    },
+  });
+
+  console.log("hei");
+
+  const nrOfCorrectGuessesToKill =
+    aliasWithGame.teams.games.nrOfCorrectGuessesToKill;
+
+  const nrCorrectGuesses = aliasWithGame.guesses.reduce(
+    (sum, item) => sum + (item.isCorrect ? 1 : 0),
+    0
+  );
+  return nrCorrectGuesses >= nrOfCorrectGuessesToKill;
 };

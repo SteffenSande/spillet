@@ -1,0 +1,19 @@
+---
+import { getJSDocTypeParameterTags } from "typescript";
+import AliasOverview from "../../components/Alias/Overview";
+import Layout from "../../layouts/Layout.astro";
+import { getPublicUsers, getTeams } from "../../lib/user";
+
+const user = Astro.cookies.get("session")?.value;
+
+let publicUsers;
+let teams;
+if (user) {
+  publicUsers = await getPublicUsers(user);
+  teams = await getTeams(user);
+}
+---
+
+<Layout>
+  <AliasOverview publicUsers={publicUsers} teams={teams} client:only />
+</Layout>

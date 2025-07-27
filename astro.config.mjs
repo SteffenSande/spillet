@@ -26,6 +26,7 @@ export default defineConfig({
       },
     },
 
+    // @ts-ignore
     plugins: [tailwindcss()],
   },
   output: "server",

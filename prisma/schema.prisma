@@ -10,27 +10,29 @@ datasource db {
 }
 
 model games {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  maxGuesses  Int
-  teams       teams[]
+  id                       Int     @id @default(autoincrement())
+  name                     String
+  description              String  @default("")
+  maxGuesses               Int
+  nrOfCorrectGuessesToKill Int     @default(2)
+  teams                    teams[]
 }
 
 model teams {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  gamesId     Int
-  games       games   @relation(fields: [gamesId], references: [id])
-  Alias       Alias[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String         @default("")
+  gamesId      Int
+  games        games          @relation(fields: [gamesId], references: [id])
+  Alias        Alias[]
+  AliasGuesses AliasGuesses[]
 }
 
 model Alias {
   id                Int            @id @default(autoincrement())
   externalId        String         @unique @default(uuid())
   name              String
-  description       String?
+  description       String         @default("")
   hiddenDescription String?
   teams             teams          @relation(fields: [teamsId], references: [id])
   teamsId           Int
@@ -38,14 +40,18 @@ model Alias {
   guessesMade       AliasGuesses[] @relation("guess")
   guesses           AliasGuesses[] @relation("guesser")
   CodeFound         CodeFound[]
+  alive             Boolean        @default(true)
 }
 
 model AliasGuesses {
-  id        Int   @id @default(autoincrement())
-  guess     Alias @relation(name: "guess", fields: [aliasId], references: [id])
+  id        Int     @id @default(autoincrement())
+  guess     Alias   @relation(name: "guess", fields: [aliasId], references: [id])
   aliasId   Int
   guesserId Int
-  guesser   Alias @relation(name: "guesser", fields: [guesserId], references: [id])
+  guesser   Alias   @relation(name: "guesser", fields: [guesserId], references: [id])
+  isCorrect Boolean
+  team      teams   @relation(fields: [teamsId], references: [id])
+  teamsId   Int
 }
 
 model Codes {

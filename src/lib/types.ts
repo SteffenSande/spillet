@@ -11,3 +11,15 @@ export interface Code {
   hint?: String;
   assignment?: String;
 }
+
+export interface PublicUser {
+  id: number;
+  name: string;
+  description: string;
+  alreadyVotedFor: boolean;
+  isAlive: boolean;
+}
+export interface Team {
+  id: number;
+  name: string;
+}

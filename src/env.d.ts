@@ -1,5 +1,6 @@
 declare namespace App {
   interface Locals {
-    user: string;
+    user?: string;
+    isAlive: boolean;
   }
 }

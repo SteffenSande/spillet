@@ -5,6 +5,7 @@ import { getQueryClient } from '../../store/Query';
 import HintToast from './HintToast';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
+import HomeButton from './HomeButton';
 
 export interface IProps {
   children: React.ReactNode
@@ -28,11 +29,15 @@ const Layout: React.FunctionComponent<IProps> = ({ children }) => {
   return <QueryClientProvider
     client={getQueryClient()}
   >
-    <div className='p-4 flex items-center flex-col h-[100dvh] w-full gap-4'>
-      {children}
+    <div className='p-4 grid gap-4'>
+      <nav>
+        <HomeButton></HomeButton>
+      </nav>
+      <div className='flex items-center flex-col h-[100dvh] w-full gap-4'>
+        {children}
+      </div>
+      <HintToast />
     </div>
-
-    <HintToast />
   </QueryClientProvider >
 };
 

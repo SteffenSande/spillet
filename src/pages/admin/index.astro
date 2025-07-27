@@ -1,0 +1,34 @@
+---
+// server
+import Home from "../../components/Home";
+import Layout from "../../layouts/Layout.astro";
+import prisma from "../../lib/prisma";
+import { getUserWithAllCodes } from "../../lib/user";
+
+const codes = await prisma.codes.findMany();
+const alias = await prisma.alias.findMany();
+
+const user = Astro.cookies.get("session")?.value;
+
+let you;
+if (user) {
+  you = await getUserWithAllCodes(user);
+}
+---
+
+<Layout>
+  <Home
+    you={you}
+    codes={codes?.map((code) => {
+      return {
+        externalId: code.externalId,
+      };
+    }) || []}
+    alias={alias?.map((item) => {
+      return {
+        externalId: item.externalId,
+      };
+    }) || []}
+    client:load
+  />
+</Layout>

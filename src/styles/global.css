@@ -1,20 +1,63 @@
 @import "tailwindcss";
+
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+
+@theme {
+  --color-bg: #003b3b;
+  --text-color-primary: #f9f4ef;
+  --text-color-secondary: #b8b2a8;
+
+  --color-yellow: #f2b705;
+  --color-purple: #812a8a;
+  --color-green: #4cb9a5;
+}
+
+body {
+  @apply bg-bg;
+  @apply text-primary;
+}
+
 @layer base {
   h1 {
     font-size: var(--text-2xl);
+    @apply text-primary;
   }
   h2 {
     font-size: var(--text-xl);
+    @apply text-primary;
   }
   h3 {
     font-size: var(--text-lg);
   }
+
   a {
     color: var(--color-blue-600);
     text-decoration-line: underline;
   }
   button {
-    color: white;
-    background-color: blue;
+    @apply px-3 py-4 bg-white text-white font-semibold text-base rounded-xl
+           shadow-lg transition-transform duration-200 ease-in-out;
+  }
+  button:hover {
+    @apply brightness-110 -translate-y-0.5 shadow-lg;
+  }
+
+  button:active {
+    @apply scale-95 shadow-sm;
+  }
+  a {
+    @apply text-indigo-600 underline underline-offset-2 transition-colors duration-200;
+  }
+
+  a:hover {
+    @apply text-indigo-800;
+  }
+
+  a:focus {
+    @apply ring-2 ring-indigo-300 rounded-sm outline-none;
+  }
+
+  a:active {
+    @apply text-indigo-900;
   }
 }

@@ -9,6 +9,7 @@ export const hints = {
     handler: async (input: string) => {
       try {
         console.log("sending");
+
         send({ id: 1, hint: input + Math.random() * 100 });
       } catch (e) {
         console.error(e);
