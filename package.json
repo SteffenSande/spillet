@@ -7,7 +7,8 @@
     "build": "npx prisma migrate deploy && astro build",
     "preview": "astro preview",
     "start": "node ./dist/server/entry.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "svg": "npx @svgr/cli src/images/* --typescript --out-dir src/components/images"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -53,6 +54,7 @@
     "vite-tsconfig-paths": "^5.1.4"
   },
   "devDependencies": {
+    "@svgr/cli": "^8.1.0",
     "@types/js-cookie": "^3.0.6",
     "@types/react-syntax-highlighter": "^15.5.13",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",

@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../Layout/Layout';
 import type { User } from '../../lib/types';
 import { ExpandableCard } from '../utils/Expandable';
+import SvgMafiaGrande from '../images/MafiaGrande';
 
 declare global {
   interface Window {
@@ -28,7 +29,7 @@ const Home: React.FunctionComponent<IProps> = ({ you, codes, alias }) => {
   }
 
   return <Layout>
-    <img src="/assets/MafiaGrande.svg"></img>
+    <SvgMafiaGrande className='h-6 w-6' />
     <h1 className='text-3xl'>{you.name}</h1>
     <ExpandableCard title='Beskrivelse'>
       <p>{you.description}</p>
