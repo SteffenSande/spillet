@@ -25,14 +25,12 @@ export const auth = defineMiddleware(async (context, next) => {
 export const killed = defineMiddleware(async (context, next) => {
   try {
     const user = context.locals.user;
-    if (user && (await isDead(user))) {
-      return context.rewrite(
-        new Request("/killed", {
-          headers: {
-            "x-redirect-to": context.url.pathname,
-          },
-        })
-      );
+    if (
+      user &&
+      (await isDead(user)) &&
+      !context.url.pathname.includes("/killed")
+    ) {
+      return context.redirect("/killed");
     }
     return next();
   } catch (e) {

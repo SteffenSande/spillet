@@ -23,3 +23,13 @@ export interface Team {
   id: number;
   name: string;
 }
+
+export type ServerAction = KillCommand | Hint;
+
+export interface KillCommand {
+  type: "kill";
+}
+export interface Hint {
+  type: "hint";
+  message: string;
+}

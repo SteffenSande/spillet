@@ -30,6 +30,7 @@ const Home: React.FunctionComponent<IProps> = ({ you }) => {
       <p>{you.description}</p>
     </ExpandableCard>
     <ExpandableCard title='Hemmelig beskrivelse'>
+      <h3>Lag: {you.team}</h3>
       <p>{you.hiddenDescription}</p>
     </ExpandableCard>
 

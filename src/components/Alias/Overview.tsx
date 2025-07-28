@@ -23,7 +23,7 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
       {publicUsers.map(user => {
         return <ExpandableCard title={user.name}>
           <p>{user.description}</p>
-          <h3>Vil du bruke stemmen din på å si hvilket lag {user.name} er på?</h3>
+          <h3>Vil du bruke stemmen din på å si hvilket lag {user.name} er på?</h3>
           <div className='w-full grid grid-cols-2 gap-4 justify-between'>
             {!confirmVote && teams.map(team => {
               return <button onClick={() => {

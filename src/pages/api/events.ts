@@ -1,18 +1,35 @@
 import type { APIRoute } from "astro";
+import type { ServerAction } from "../../lib/types";
 
-const clients = new Set<ReadableStreamDefaultController>();
+const clients = new Map<string, ReadableStreamDefaultController>();
+const clientQueue = new Map<string, ServerAction[]>();
 
 export const GET: APIRoute = async ({ request }) => {
   let control: ReadableStreamDefaultController;
 
+  const cookieHeader = request.headers.get("cookie") || "";
+  const cookies = Object.fromEntries(
+    cookieHeader.split("; ").map((cookie) => {
+      const [key, value] = cookie.split("=");
+      return [key, value];
+    })
+  );
+  const user = cookies["session"];
+
   const stream = new ReadableStream({
     start(controller) {
       control = controller;
-      clients.add(controller);
+      clients.set(user, controller);
+      const queue = clientQueue.get(user);
+      if (queue) {
+        for (const message of queue) {
+          send(message, user);
+        }
+      }
     },
     cancel(reason) {
       // Called when client disconnects (tab closed)
-      clients.delete(control);
+      clients.delete(user);
       console.log("SSE stream closed. Reason:", reason);
     },
   });
@@ -26,12 +43,22 @@ export const GET: APIRoute = async ({ request }) => {
   });
 };
 
-export const send = (hint: any) => {
+export const send = (serverAction: ServerAction, user: string) => {
   const encoder = new TextEncoder();
-  console.log(clients);
-  for (const client of clients) {
-    const msg = formatMessage(hint);
+  const client = clients.get(user);
+  const msg = formatMessage(serverAction);
+  if (client) {
     client.enqueue(encoder.encode(msg));
+    // TODO: Might store it to db
+  } else {
+    const queue = clientQueue.get(user) || [];
+    clientQueue.set(user, [...queue, serverAction]);
+  }
+};
+
+export const sendAll = (serverAction: ServerAction) => {
+  for (const client of clients) {
+    send(serverAction, client[0]);
   }
 };
 

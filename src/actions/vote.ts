@@ -3,6 +3,8 @@ import { z } from "astro:content";
 import "dotenv";
 import { send } from "../pages/api/events";
 import { getDb } from "../lib/getPrisma";
+import { shouldDie } from "../lib/user";
+import prisma from "../lib/prisma";
 
 export const vote = {
   send: defineAction({
@@ -41,16 +43,21 @@ export const vote = {
 
       if (
         voterVotes.find((vote) => {
-          return vote.aliasId === input.id;
+          return vote.guessId === input.id;
         })
       ) {
-        console.log("hello");
         throw new ActionError({
           code: "BAD_REQUEST",
           message: "Can't vote for the same person",
         });
       }
-      if (voterVotes.length <= game.maxGuesses) {
+      if (voterVotes.length >= game.maxGuesses) {
+        throw new ActionError({
+          code: "BAD_REQUEST",
+          message: `Can't vote more than ${game.maxGuesses} times`,
+        });
+      }
+      {
         const votingFor = await db.alias.findFirstOrThrow({
           where: {
             id: input.id,
@@ -59,16 +66,42 @@ export const vote = {
             teams: true,
           },
         });
+        if (!votingFor.alive) {
+          throw new ActionError({
+            code: "BAD_REQUEST",
+            message: "Can't vote for a dead person",
+          });
+        }
+
         const correctGuess = votingFor.teamsId == input.team;
 
         await db.aliasGuesses.create({
           data: {
             isCorrect: correctGuess,
-            aliasId: votingFor.id,
+            guessId: votingFor.id,
             guesserId: voter.id,
             teamsId: input.team,
           },
         });
+
+        const isVotingForDying = await shouldDie(votingFor.id);
+
+        if (isVotingForDying) {
+          await prisma.alias.update({
+            where: {
+              id: votingFor.id,
+            },
+            data: {
+              alive: false,
+            },
+          });
+          send(
+            {
+              type: "kill",
+            },
+            votingFor.externalId
+          );
+        }
       }
     },
   }),

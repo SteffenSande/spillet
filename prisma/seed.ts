@@ -15,28 +15,28 @@ export async function main() {
   });
   const destroyers = await prisma.teams.create({
     data: {
-      name: "Ødeleggerne",
+      name: "De uskyldige",
       gamesId: game.id,
     },
   });
 
   const patent = await prisma.teams.create({
     data: {
-      name: "De uskyldige",
+      name: "De grådige",
       gamesId: game.id,
     },
   });
 
   const teite = await prisma.teams.create({
     data: {
-      name: "De grådige",
+      name: "De destruktive",
       gamesId: game.id,
     },
   });
 
   const sellers = await prisma.teams.create({
     data: {
-      name: "De destruktive",
+      name: "De tvilsomme",
       gamesId: game.id,
     },
   });

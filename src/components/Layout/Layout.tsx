@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSSEHints } from '../hooks/sse';
+import { useServerActions } from '../hooks/sse';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { getQueryClient } from '../../store/Query';
 import HintToast from './HintToast';
@@ -12,17 +12,24 @@ export interface IProps {
 }
 
 const Layout: React.FunctionComponent<IProps> = ({ children }) => {
-  const { hint, isMaster } = useSSEHints();
+  const { serverAction } = useServerActions();
   React.useEffect(() => {
-    if (hint) {
-      toast(hint);
+    if (serverAction?.type === "hint") {
+      toast(serverAction.message);
     }
-  }, [hint])
+    if (serverAction?.type === "kill") {
+      window.location.reload();
+    }
+  }, [serverAction])
 
   React.useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      Cookies.set('session', user);
+    const user = Cookies.get("session");
+    if (!user) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        Cookies.set('session', storedUser);
+        window.location.reload();
+      }
     }
   }, [])
 

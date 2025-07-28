@@ -45,8 +45,8 @@ model Alias {
 
 model AliasGuesses {
   id        Int     @id @default(autoincrement())
-  guess     Alias   @relation(name: "guess", fields: [aliasId], references: [id])
-  aliasId   Int
+  guess     Alias   @relation(name: "guess", fields: [guessId], references: [id])
+  guessId   Int
   guesserId Int
   guesser   Alias   @relation(name: "guesser", fields: [guesserId], references: [id])
   isCorrect Boolean

@@ -4,13 +4,36 @@ import "dotenv";
 import { send } from "../pages/api/events";
 
 export const hints = {
+  kill: defineAction({
+    handler: async (_, context) => {
+      try {
+        const user = context.locals.user;
+
+        if (user)
+          send(
+            {
+              type: "kill",
+            },
+            user
+          );
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  }),
   send: defineAction({
     input: z.string(),
-    handler: async (input: string) => {
+    handler: async (input: string, context) => {
       try {
-        console.log("sending");
-
-        send({ id: 1, hint: input + Math.random() * 100 });
+        const user = context.locals.user;
+        if (user)
+          send(
+            {
+              type: "hint",
+              message: input,
+            },
+            user
+          );
       } catch (e) {
         console.error(e);
       }

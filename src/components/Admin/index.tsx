@@ -32,6 +32,9 @@ const Admin: React.FunctionComponent<IProps> = ({ codes, alias }) => {
     <button onClick={async () => {
       await actions.hints.send("Heisann")
     }}>Send</button>
+    <button onClick={async () => {
+      await actions.hints.kill()
+    }}>Kill</button>
   </Layout>
 };
 

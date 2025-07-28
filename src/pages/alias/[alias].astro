@@ -11,6 +11,9 @@ if (alias) {
     where: {
       externalId: alias,
     },
+    include: {
+      teams: true,
+    },
   });
   if (temp) {
     you = temp;

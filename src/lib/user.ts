@@ -143,7 +143,6 @@ export const getCodesForUser = async (aliasId: string): Promise<Code[]> => {
   for (const codeFound of foundClue) {
     codesFound.set(codeFound.codesId, { found: true });
   }
-  console.log(codesFound);
 
   for (const guess of guesses) {
     const info = codeGuesses.get(guess.codesId) || {
@@ -181,13 +180,12 @@ export const isDead = async (user: string): Promise<Boolean> => {
   return !alias.alive;
 };
 
-export const shouldDie = async (user: string): Promise<Boolean> => {
+export const shouldDie = async (id: number): Promise<Boolean> => {
   const aliasWithGame = await prisma.alias.findFirstOrThrow({
     where: {
-      externalId: user,
+      id: id,
     },
     include: {
-      guesses: true,
       teams: {
         include: {
           games: true,
@@ -196,14 +194,17 @@ export const shouldDie = async (user: string): Promise<Boolean> => {
     },
   });
 
-  console.log("hei");
+  const guesses = await prisma.aliasGuesses.count({
+    where: {
+      guessId: id,
+      isCorrect: true,
+    },
+  });
 
   const nrOfCorrectGuessesToKill =
     aliasWithGame.teams.games.nrOfCorrectGuessesToKill;
 
-  const nrCorrectGuesses = aliasWithGame.guesses.reduce(
-    (sum, item) => sum + (item.isCorrect ? 1 : 0),
-    0
-  );
-  return nrCorrectGuesses >= nrOfCorrectGuessesToKill;
+  console.log("guesses", guesses);
+  console.log("nrOfCorrectGuesses", nrOfCorrectGuessesToKill);
+  return guesses >= nrOfCorrectGuessesToKill;
 };

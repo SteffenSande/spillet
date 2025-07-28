@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
+import type { ServerAction } from "../../lib/types";
 
 const MASTER_KEY = "sse_master_tab";
 const HEARTBEAT_KEY = "sse_master_heartbeat";
 const HEARTBEAT_INTERVAL = 1000; // 1 second
 const MASTER_TIMEOUT = 5000; // 5 seconds
 
-export function useSSEHints() {
-  const [hint, setHint] = useState<string | null>(null);
+export function useServerActions() {
+  const [serverAction, setServerAction] = useState<ServerAction | null>(null);
   const [isMaster, setIsMaster] = useState(false);
   const tabId = useRef(uuid());
 
@@ -58,12 +59,12 @@ export function useSSEHints() {
 
   // BroadcastChannel setup
   useEffect(() => {
-    const bc = new BroadcastChannel("hints");
+    const bc = new BroadcastChannel("serverActions");
     broadcastRef.current = bc;
 
     bc.onmessage = (event) => {
-      if (event.data?.hint) {
-        setHint(event.data.hint);
+      if (event.data) {
+        setServerAction(JSON.parse(event.data));
       }
     };
 
@@ -80,10 +81,10 @@ export function useSSEHints() {
     eventSourceRef.current = es;
 
     es.onmessage = (event) => {
+      console.log(event)
       const newHint = event.data;
-      console.log(newHint)
-      setHint(newHint);
-      broadcastRef.current?.postMessage({ hint: newHint });
+      setServerAction(JSON.parse(newHint));
+      broadcastRef.current?.postMessage(newHint);
     };
 
     es.onerror = () => {
@@ -96,5 +97,5 @@ export function useSSEHints() {
     };
   }, [isMaster]);
 
-  return { hint, isMaster };
+  return { serverAction };
 }

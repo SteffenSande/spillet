@@ -40,12 +40,9 @@ if (codeId && user) {
       assignment: code.assignment,
     };
     if (!hasCorrectAnswer) {
-      const alias = await prisma.alias.findUnique({
+      const alias = await prisma.alias.findFirstOrThrow({
         where: { externalId: user },
       });
-
-      console.log(code);
-      console.log(alias);
 
       if (
         !(await prisma.codeFound.findFirst({
