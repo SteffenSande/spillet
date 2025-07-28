@@ -1,7 +1,6 @@
 import React from 'react';
 import { actions } from 'astro:actions';
 import Layout from '../Layout/Layout';
-import type { User } from '../../lib/types';
 
 declare global {
   interface Window {

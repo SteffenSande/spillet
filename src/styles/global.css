@@ -35,7 +35,7 @@ body {
     text-decoration-line: underline;
   }
   button {
-    @apply px-3 py-4 bg-white text-white font-semibold text-base rounded-xl
+    @apply px-3 py-4 bg-teal-700 text-white font-semibold rounded-xl
            shadow-lg transition-transform duration-200 ease-in-out;
   }
   button:hover {
@@ -46,18 +46,19 @@ body {
     @apply scale-95 shadow-sm;
   }
   a {
-    @apply text-indigo-600 underline underline-offset-2 transition-colors duration-200;
+    @apply w-full px-3 py-4 bg-teal-700 text-white font-semibold rounded-xl
+           shadow-lg transition-transform duration-200 ease-in-out;
   }
 
   a:hover {
-    @apply text-indigo-800;
+    @apply brightness-110 -translate-y-0.5 shadow-lg;
   }
 
   a:focus {
-    @apply ring-2 ring-indigo-300 rounded-sm outline-none;
+    @apply ring-2 ring-teal-300 rounded-sm outline-none;
   }
 
   a:active {
-    @apply text-indigo-900;
+    @apply scale-95 shadow-sm;
   }
 }

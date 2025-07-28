@@ -11,16 +11,10 @@ declare global {
 }
 
 export interface IProps {
-  codes: {
-    externalId: string
-  }[]
-  alias: {
-    externalId: string
-  }[]
   you?: User
 }
 
-const Home: React.FunctionComponent<IProps> = ({ you, codes, alias }) => {
+const Home: React.FunctionComponent<IProps> = ({ you }) => {
 
   if (!you) {
     return <Layout>
@@ -29,7 +23,8 @@ const Home: React.FunctionComponent<IProps> = ({ you, codes, alias }) => {
   }
 
   return <Layout>
-    <SvgMafiaGrande className='h-6 w-6' />
+    <SvgMafiaGrande className='w-3/4 absolute -top-72 -z-10' />
+    <div className='h-60' />
     <h1 className='text-3xl'>{you.name}</h1>
     <ExpandableCard title='Beskrivelse'>
       <p>{you.description}</p>

@@ -23,8 +23,8 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
       {publicUsers.map(user => {
         return <ExpandableCard title={user.name}>
           <p>{user.description}</p>
-          <h3 className='mt-4'>Vil du bruke stemmen din på å si hvilket lag {user.name} er på?</h3>
-          <div className='flex gap-4 justify-between'>
+          <h3>Vil du bruke stemmen din på å si hvilket lag {user.name} er på?</h3>
+          <div className='w-full grid grid-cols-2 gap-4 justify-between'>
             {!confirmVote && teams.map(team => {
               return <button onClick={() => {
                 setConfirmVote(team.id)
@@ -35,11 +35,9 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
                 id: user.id,
                 team: confirmVote
               })
-              console.log(noe)
               if (noe.error) {
                 alert(noe.error.message);
               }
-              console.log("vote for")
               setConfirmVote(undefined)
             }}>
               Du vil si at {user.name} er en del av {teams.find(team => team.id === confirmVote)?.name}

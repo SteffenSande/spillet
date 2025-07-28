@@ -24,7 +24,7 @@ export const ExpandableCard: React.FC<IProps> = ({ title, children }) => {
   return (
     <div className="w-full">
       <div
-        className="p-4 bg-teal-700 rounded-lg shadow-lg cursor-pointer"
+        className="p-4 bg-teal-700 rounded-t-lg shadow-lg cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex justify-between items-center">
@@ -44,7 +44,7 @@ export const ExpandableCard: React.FC<IProps> = ({ title, children }) => {
         transition={{ duration: 0.3 }}
         className="overflow-hidden bg-teal-800 rounded-b"
       >
-        <div ref={contentRef} className="p-4">
+        <div ref={contentRef} className="p-4 flex flex-col gap-4 relative">
           {children}
         </div>
       </motion.div>
