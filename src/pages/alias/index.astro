@@ -2,18 +2,26 @@
 import { getJSDocTypeParameterTags } from "typescript";
 import AliasOverview from "../../components/Alias/Overview";
 import Layout from "../../layouts/Layout.astro";
-import { getPublicUsers, getTeams } from "../../lib/user";
+import { getPublicUsers, getTeams, getVotes } from "../../lib/user";
 
 const user = Astro.cookies.get("session")?.value;
 
 let publicUsers;
 let teams;
+let votes;
 if (user) {
   publicUsers = await getPublicUsers(user);
   teams = await getTeams(user);
+  votes = await getVotes(user);
+  console.log(votes);
 }
 ---
 
 <Layout>
-  <AliasOverview publicUsers={publicUsers} teams={teams} client:only />
+  <AliasOverview
+    votes={votes}
+    publicUsers={publicUsers}
+    teams={teams}
+    client:only
+  />
 </Layout>

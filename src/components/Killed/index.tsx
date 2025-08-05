@@ -13,19 +13,10 @@ export interface IProps {
 }
 
 const Killed: React.FunctionComponent<IProps> = ({ }) => {
-  // const [hint, setHint] = React.useState("");
-
-
   return <Layout>
     <SvgMafiaGrande className='w-3/4 absolute -top-72 -z-10' />
     <div className='h-60' />
-    your dead
-    {/* <input type="text" value={hint} onChange={e => {
-      setHint(e.target.value);
-    }} />
-    <button onClick={() => {
-      actions.hints.send(hint)
-    }}> Sent hint</button> */}
+    <p>Du er ute av spillet da 2 andre deltagere har gjettet ditt lag.</p>
   </Layout >
 
 };

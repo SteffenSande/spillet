@@ -45,6 +45,18 @@ body {
   button:active {
     @apply scale-95 shadow-sm;
   }
+  button.destructive {
+    @apply px-3 py-4 bg-red-700 text-white font-semibold rounded-xl
+           shadow-lg transition-transform duration-200 ease-in-out;
+  }
+
+  button.destructive:hover {
+    @apply brightness-110 -translate-y-0.5 shadow-lg;
+  }
+
+  button.destructive:active {
+    @apply scale-95 shadow-sm;
+  }
   a {
     @apply w-full px-3 py-4 bg-teal-700 text-white font-semibold rounded-xl
            shadow-lg transition-transform duration-200 ease-in-out;

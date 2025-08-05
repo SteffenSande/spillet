@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import type { Code, PublicUser, Team, User } from "./types";
+import type { Code, PublicUser, Team, User, Votes } from "./types";
 
 export const getUserWithAllCodes = async (
   aliasId: string
@@ -26,6 +26,40 @@ export const getUserWithAllCodes = async (
   };
 
   return user;
+};
+
+export const getVotes = async (aliasId: string): Promise<Votes> => {
+  // Fetch all guesses made by this alias
+  const game = await prisma.games.findFirstOrThrow({
+    where: {
+      teams: {
+        some: {
+          Alias: {
+            some: {
+              externalId: aliasId,
+            },
+          },
+        },
+      },
+    },
+    include: {
+      teams: true,
+    },
+  });
+
+  const votesUsed = await prisma.aliasGuesses.count({
+    where: {
+      guesser: {
+        externalId: aliasId,
+      },
+    },
+  });
+
+  return {
+    max: game.maxGuesses,
+    used: votesUsed,
+    canVote: votesUsed < game.maxGuesses,
+  };
 };
 
 export const getTeams = async (aliasId: string): Promise<Team[]> => {

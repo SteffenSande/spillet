@@ -23,6 +23,11 @@ export interface Team {
   id: number;
   name: string;
 }
+export interface Votes {
+  max: number;
+  used: number;
+  canVote: boolean;
+}
 
 export type ServerAction = KillCommand | Hint;
 
