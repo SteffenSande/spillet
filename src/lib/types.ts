@@ -3,13 +3,21 @@ export interface User {
   description: string;
   team: string;
   hiddenDescription: string;
-  codes: Code[];
+  codes: ICode[];
 }
 
-export interface Code {
-  externalId?: String;
-  hint?: String;
-  assignment?: String;
+export interface ICode {
+  id: number;
+  externalId: string;
+  hint?: string;
+  assignment: string;
+  length: number;
+}
+
+export interface IFinalQuestion {
+  externalId: string;
+  assignment: string;
+  codeLength: number;
 }
 
 export interface PublicUser {

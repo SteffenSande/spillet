@@ -15,9 +15,12 @@ export interface IProps {
   alias: {
     externalId: string
   }[]
+  finalQuestion: {
+    externalId: string
+  }
 }
 
-const Admin: React.FunctionComponent<IProps> = ({ codes, alias }) => {
+const Admin: React.FunctionComponent<IProps> = ({ codes, alias, finalQuestion }) => {
 
   return <Layout>
     <h3 className='text-3xl'>Oppgaver:</h3>
@@ -29,6 +32,8 @@ const Admin: React.FunctionComponent<IProps> = ({ codes, alias }) => {
       return <a href={`/alias/${item.externalId}`}>Alias {i + 1}</a>
     })}
 
+    <h3 className='text-3xl'>FinalQuestion:</h3>
+    <a href={`/finalQuestion/${finalQuestion.externalId}`}>final</a>
     <button onClick={async () => {
       await actions.hints.send("Heisann")
     }}>Send</button>

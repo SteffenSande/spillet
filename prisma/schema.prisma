@@ -16,6 +16,7 @@ model games {
   maxGuesses               Int
   nrOfCorrectGuessesToKill Int     @default(2)
   teams                    teams[]
+  canFindFinalQuestion     Boolean @default(false)
 }
 
 model teams {
@@ -29,18 +30,20 @@ model teams {
 }
 
 model Alias {
-  id                Int            @id @default(autoincrement())
-  externalId        String         @unique @default(uuid())
-  name              String
-  description       String         @default("")
-  hiddenDescription String?
-  teams             teams          @relation(fields: [teamsId], references: [id])
-  teamsId           Int
-  CodesGuess        CodesGuess[]
-  guessesMade       AliasGuesses[] @relation("guess")
-  guesses           AliasGuesses[] @relation("guesser")
-  CodeFound         CodeFound[]
-  alive             Boolean        @default(true)
+  id                 Int                  @id @default(autoincrement())
+  externalId         String               @unique @default(uuid())
+  name               String
+  description        String               @default("")
+  hiddenDescription  String?
+  teams              teams                @relation(fields: [teamsId], references: [id])
+  teamsId            Int
+  CodesGuess         CodesGuess[]
+  guessesMade        AliasGuesses[]       @relation("guess")
+  guesses            AliasGuesses[]       @relation("guesser")
+  CodeFound          CodeFound[]
+  alive              Boolean              @default(true)
+  FinalQuestionGuess FinalQuestionGuess[]
+  FinalFound         FinalFound[]
 }
 
 model AliasGuesses {
@@ -60,7 +63,7 @@ model Codes {
   CodesGuess CodesGuess[]
   externalId String       @unique @default(uuid())
   hint       String
-  assignment String
+  assignment String       @db.Text
   CodeFound  CodeFound[]
 }
 
@@ -80,4 +83,30 @@ model CodesGuess {
   aliasId   Int
   count     Int     @default(0)
   isCorrect Boolean
+}
+
+model FinalQuestion {
+  id                 Int                  @id @default(autoincrement())
+  externalId         String               @unique @default(uuid())
+  FinalQuestionGuess FinalQuestionGuess[]
+  code               String
+  assignment         String               @db.Text
+  FinalFound         FinalFound[]
+}
+
+model FinalQuestionGuess {
+  id              Int           @id @default(autoincrement())
+  alias           Alias         @relation(fields: [aliasId], references: [id])
+  aliasId         Int
+  finalQuestion   FinalQuestion @relation(fields: [finalQuestionId], references: [id])
+  finalQuestionId Int
+  isCorrect       Boolean
+}
+
+model FinalFound {
+  id              Int           @id @default(autoincrement())
+  finalQuestion   FinalQuestion @relation(fields: [finalQuestionId], references: [id])
+  finalQuestionId Int
+  alias           Alias         @relation(fields: [aliasId], references: [id])
+  aliasId         Int
 }

@@ -5,9 +5,10 @@ import { FaChevronDown } from "react-icons/fa";
 interface IProps {
   title: string;
   children: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
-export const ExpandableCard: React.FC<IProps> = ({ title, children }) => {
+export const ExpandableCard: React.FC<IProps> = ({ title, children, icon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -29,7 +30,11 @@ export const ExpandableCard: React.FC<IProps> = ({ title, children }) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex justify-between items-center">
-          <h2 className="font-bold">{title}</h2>
+          <span className="flex items-center gap-4">
+            {icon && icon}
+            <h2 className="font-bold">
+              {title}</h2>
+          </span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3 }}

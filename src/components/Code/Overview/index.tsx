@@ -1,11 +1,11 @@
 import React from 'react';
 import Layout from '../../Layout/Layout';
-import type { Code } from '../../../lib/types';
+import type { ICode } from '../../../lib/types';
 import { ExpandableCard } from '../../utils/Expandable';
 import Assignment from './Assignment';
 
 export interface IProps {
-  codes?: Code[]
+  codes?: ICode[]
 }
 
 const CodeOverview: React.FunctionComponent<IProps> = ({ codes }) => {
@@ -15,9 +15,12 @@ const CodeOverview: React.FunctionComponent<IProps> = ({ codes }) => {
 
   return <Layout>
     {codes.map((code, i) => {
-      return <ExpandableCard key={`oppgave ${i}`} title={"Oppgave: " + (i + 1)}>
+      return <div
+        key={`oppgave ${i}`}
+        className={`p-4 bg-teal-700 rounded-lg shadow-lg w-full gap-4 flex flex-col`}>
         <Assignment code={code} />
-      </ExpandableCard>
+      </div>
+
     })}
   </Layout >
 };

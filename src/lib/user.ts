@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import type { Code, PublicUser, Team, User, Votes } from "./types";
+import type { ICode, PublicUser, Team, User, Votes } from "./types";
 
 export const getUserWithAllCodes = async (
   aliasId: string
@@ -144,7 +144,7 @@ export const getPublicUsers = async (
   return aliases;
 };
 
-export const getCodesForUser = async (aliasId: string): Promise<Code[]> => {
+export const getCodesForUser = async (aliasId: string): Promise<ICode[]> => {
   const allCodes = await prisma.codes.findMany();
 
   // Fetch all guesses made by this alias
@@ -187,7 +187,7 @@ export const getCodesForUser = async (aliasId: string): Promise<Code[]> => {
   }
 
   // Build codes array with conditional fields
-  const codes: Code[] = allCodes.map((code) => {
+  const codes: ICode[] = allCodes.map((code) => {
     const guessInfo = codeGuesses.get(code.id) ?? {
       correct: false,
     };

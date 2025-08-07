@@ -1,0 +1,83 @@
+---
+// server
+import FinalQuestion from "../../components/finalQuestion";
+import FinalQuestionNotFound from "../../components/finalQuestion/FinalQuestionNotFound";
+import Layout from "../../layouts/Layout.astro";
+import prisma from "../../lib/prisma";
+import { type IFinalQuestion, type Team } from "../../lib/types";
+const { finalQuestionId } = Astro.params;
+
+const user = Astro.cookies.get("session")?.value;
+let winnerTeam: Team | undefined;
+let question: IFinalQuestion | undefined;
+if (finalQuestionId && user) {
+  const finalQuestion = await prisma.finalQuestion.findFirst({
+    where: {
+      externalId: finalQuestionId,
+    },
+  });
+
+  if (finalQuestion) {
+    question = {
+      assignment: finalQuestion.assignment,
+      codeLength: finalQuestion.code.length,
+      externalId: finalQuestion.externalId,
+    };
+    const hasCorrectAnswer = await prisma.finalQuestionGuess.findFirst({
+      where: {
+        id: finalQuestion.id,
+        isCorrect: true,
+      },
+      include: {
+        alias: {
+          include: {
+            teams: true,
+          },
+        },
+      },
+    });
+
+    if (!hasCorrectAnswer) {
+      const alias = await prisma.alias.findFirstOrThrow({
+        where: { externalId: user },
+      });
+
+      if (
+        !(await prisma.finalFound.findFirst({
+          where: {
+            aliasId: alias.id,
+            finalQuestionId: finalQuestion.id,
+          },
+        }))
+      ) {
+        await prisma.finalFound.create({
+          data: {
+            aliasId: alias.id,
+            finalQuestionId: finalQuestion.id,
+          },
+        });
+      }
+    } else {
+      winnerTeam = hasCorrectAnswer.alias.teams;
+    }
+  }
+}
+const teams = await prisma.teams.findMany();
+const games = await prisma.games.findFirst();
+
+export const prerender = false;
+---
+
+<Layout>
+  {
+    games?.canFindFinalQuestion && (
+      <FinalQuestion
+        finalQuestion={question}
+        teams={teams}
+        initWinnerTeam={winnerTeam}
+        client:only
+      />
+    )
+  }
+  {!games?.canFindFinalQuestion && <FinalQuestionNotFound client:load />}
+</Layout>

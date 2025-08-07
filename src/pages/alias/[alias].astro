@@ -7,19 +7,23 @@ const { alias } = Astro.params;
 let you;
 
 if (alias) {
-  const temp = await prisma.alias.findFirst({
-    where: {
-      externalId: alias,
-    },
-    include: {
-      teams: true,
-    },
-  });
-  if (temp) {
-    you = temp;
-    Astro.cookies.set("session", you.externalId, {
-      path: "/",
+  try {
+    const temp = await prisma.alias.findFirst({
+      where: {
+        externalId: alias,
+      },
+      include: {
+        teams: true,
+      },
     });
+    if (temp) {
+      you = temp;
+      Astro.cookies.set("session", you.externalId, {
+        path: "/",
+      });
+    }
+  } catch {
+    console.log("not an alias");
   }
 }
 

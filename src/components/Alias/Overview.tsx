@@ -3,6 +3,7 @@ import type { PublicUser, Team, Votes } from '../../lib/types';
 import Layout from '../Layout/Layout';
 import { ExpandableCard } from '../utils/Expandable';
 import { actions } from 'astro:actions';
+import { FaSkullCrossbones } from 'react-icons/fa';
 
 export interface IProps {
   publicUsers?: PublicUser[]
@@ -24,10 +25,10 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
     <>
       <h3>Stemmer: {votes.used}/{votes.max}</h3>
       {publicUsers.map(user => {
-        return <ExpandableCard title={user.name}>
+        return <ExpandableCard title={user.name} icon={!user.isAlive ? <FaSkullCrossbones /> : undefined}>
           <p>{user.description}</p>
 
-          {votes.canVote && (
+          {votes.canVote && user.isAlive && (
             <>
               <h3>Vil du bruke stemmen din på å si hvilket lag {user.name} er på?</h3>
               <div className='w-full grid grid-cols-2 gap-4 justify-between'>
@@ -50,6 +51,7 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
                     alert(noe.error.message);
                   }
                   setConfirmVote(undefined)
+                  window.location.reload();
                 }}>
                   Du vil si at {user.name} er en del av {teams.find(team => team.id === confirmVote)?.name}
                 </button>}

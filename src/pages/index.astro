@@ -2,9 +2,31 @@
 // server
 import Home from "../components/Home";
 import Layout from "../layouts/Layout.astro";
+import prisma from "../lib/prisma";
 import { getUserWithAllCodes } from "../lib/user";
 
 const user = Astro.cookies.get("session")?.value;
+let temp;
+
+try {
+  const game = await prisma.games.findFirst();
+  await prisma.finalFound.findFirstOrThrow({
+    where: {
+      alias: {
+        externalId: user,
+      },
+    },
+  });
+  const finalQuestion = await prisma.finalQuestion.findFirst();
+  temp =
+    game?.canFindFinalQuestion && finalQuestion
+      ? {
+          externalId: finalQuestion.externalId,
+          assignment: finalQuestion.assignment,
+          codeLength: finalQuestion.code.length,
+        }
+      : undefined;
+} catch (e) {}
 
 let you;
 if (user) {
@@ -13,5 +35,5 @@ if (user) {
 ---
 
 <Layout>
-  <Home you={you} client:load />
+  <Home you={you} finalQuestion={temp} client:load />
 </Layout>
