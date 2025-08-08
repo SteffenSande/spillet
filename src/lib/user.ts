@@ -97,7 +97,7 @@ export const getTeams = async (aliasId: string): Promise<Team[]> => {
   });
 };
 
-export const getPublicUsers = async (
+export const getPublicUsersWithoutUser = async (
   aliasId: string
 ): Promise<PublicUser[]> => {
   // Fetch all guesses made by this alias
@@ -131,7 +131,7 @@ export const getPublicUsers = async (
 
   const guessesMap = new Map<number, boolean>();
   for (const guess of guesses) {
-    guessesMap.set(guess.aliasId, true);
+    guessesMap.set(guess.guessId, true);
   }
 
   const aliases: PublicUser[] = game.teams
@@ -139,6 +139,9 @@ export const getPublicUsers = async (
     .reduce((acc, item) => {
       return [...acc, ...item];
     }, [])
+    .filter((alias) => {
+      return alias.externalId !== aliasId;
+    })
     .map((alias) => {
       return {
         id: alias.id,
