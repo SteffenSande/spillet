@@ -51,7 +51,6 @@ export async function main() {
           headers: true,
           delimiter: ";",
           quote: '"',
-          escape: '"',
           ignoreEmpty: true,
         })
       )
@@ -62,20 +61,16 @@ export async function main() {
       .on("error", reject);
   });
 
-  const aliasFiltered = aliases.filter((alias) => !!alias.hiddenDescription);
-
   // Seed data
-  for (const row of aliasFiltered) {
+  for (const row of aliases) {
     try {
       await prisma.alias.create({
         data: {
-          ...row,
-          // name: row.kallenavn
-          //   ? `${row.fornavn} ${row.kallenavn} ${row.etternavn}`
-          //   : `${row.fornavn} ${row.etternavn}`,
-          // description: row["offentlig beskrivelse"] || "",
-          // hiddenDescription: row["hemmelig beskrivelse "] || null,
-          // teamsId: parseInt(row.lag, 10),
+          externalId: row.externalId,
+          description: row.description,
+          name: row.name,
+          hiddenDescription: row.hiddenDescription,
+          teamsId: parseInt(row.teamsId, 10),
         },
       });
     } catch (error) {
@@ -83,7 +78,7 @@ export async function main() {
     }
   }
 
-  const csvPathHints = path.join(process.cwd(), "data", "hints.csv");
+  const csvPathHints = path.join(process.cwd(), "data", "updatedCodes.csv");
   const hints: Hint[] = [];
   // Read CSV
   await new Promise((resolve, reject) => {
@@ -103,30 +98,66 @@ export async function main() {
       .on("error", reject);
   });
 
-  const hintsFiltered = hints.filter((hint) => !!hint["oppgave"]);
+  const hintsFiltered = hints.filter((hint) => hint.assignment);
 
   // Seed data
   for (const row of hintsFiltered) {
-    console.log(row);
     try {
       await prisma.codes.create({
         data: {
-          code: row["løsning"].toLowerCase(),
+          code: row.code,
           hint: row.hint,
-          assignment: row["oppgave"],
+          assignment: row.assignment,
+          externalId: row.externalId,
         },
       });
     } catch (error) {
-      console.error(`❌ Error creating alias ${row.oppgave}:`, error);
+      console.error(`❌ Error creating alias ${row.assignment}:`, error);
     }
   }
-  await prisma.finalQuestion.create({
-    data: {
-      assignment:
-        "Du har funnet saven med Athenas Øye, har du nok hint til å finne koden?",
-      code: "a3o5",
-    },
+
+  const csvPathFinalQuestion = path.join(
+    process.cwd(),
+    "data",
+    "updatedFinalQuestion.csv"
+  );
+  const finalQuestions: FinalQuesiton[] = [];
+  // Read CSV
+  await new Promise((resolve, reject) => {
+    createReadStream(csvPathFinalQuestion)
+      .pipe(
+        parse<FinalQuesiton, FinalQuesiton>({
+          headers: true,
+          delimiter: ";",
+          quote: '"',
+          escape: '"',
+          ignoreEmpty: true,
+          trim: true,
+        })
+      )
+      .on("data", (row) => hints.push(row))
+      .on("end", resolve)
+      .on("error", reject);
   });
+
+  const finalQuestionsFiltered = finalQuestions.filter(
+    (question) => question.assignment
+  );
+
+  // Seed data
+  for (const row of finalQuestionsFiltered) {
+    try {
+      await prisma.finalQuestion.create({
+        data: {
+          code: row.code,
+          assignment: row.assignment,
+          externalId: row.externalId,
+        },
+      });
+    } catch (error) {
+      console.error(`❌ Error creating alias ${row.assignment}:`, error);
+    }
+  }
 }
 main();
 
@@ -151,12 +182,21 @@ export interface AliasCSVLeon {
   name: string;
   description: string;
   hiddenDescription: string;
-  teamsId: number;
+  teamsId: string;
   alive: boolean;
 }
 
 interface Hint {
-  oppgave: string;
-  løsning: string;
+  id: number;
+  code: string;
+  externalId: string;
   hint: string;
+  assignment: string;
+}
+
+interface FinalQuesiton {
+  id: number;
+  code: string;
+  externalId: string;
+  assignment: string;
 }

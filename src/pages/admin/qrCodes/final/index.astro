@@ -1,0 +1,47 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import prisma from "../../../../lib/prisma";
+import { generateQrCode } from "../../../../lib/QRCode";
+import { writeToStream } from "fast-csv";
+import { createWriteStream } from "fs";
+import path from "path";
+
+const codes = await prisma.finalQuestion.findMany();
+
+const qrCodes = await Promise.all(
+  codes.map(async (code) => {
+    return await generateQrCode(
+      `https://mafiagrande.no/finalQuestion/${code.externalId}`
+    );
+  })
+);
+const csvPathHints = path.join(
+  process.cwd(),
+  "data",
+  "updatedFinalQuestion.csv"
+);
+const ws = createWriteStream(csvPathHints);
+// Optionally, pick specific fields to export
+writeToStream(ws, codes, {
+  headers: true,
+  delimiter: ";",
+  quote: '"',
+}).on("finish", () => {
+  console.log("CSV file written successfully.");
+});
+---
+
+<Layout>
+  <div class="bg-white text-black grid grid-cols-3">
+    {
+      qrCodes.map((qrCode: string, i) => {
+        return (
+          <div class="">
+            <p>{codes[i].assignment}</p>
+            <img class="w-16 h-16" src={qrCode} />
+          </div>
+        );
+      })
+    }
+  </div>
+</Layout>

@@ -1,26 +1,12 @@
 ---
 // server
-import { write, writeToStream } from "fast-csv";
-import { createWriteStream } from "fs";
 import Admin from "../../components/Admin";
 import Layout from "../../layouts/Layout.astro";
 import prisma from "../../lib/prisma";
 import { getUserWithAllCodes } from "../../lib/user";
-import path from "path";
 
 const codes = await prisma.codes.findMany();
 const alias = await prisma.alias.findMany();
-const csvPathHints = path.join(process.cwd(), "data", "updatedAlias.csv");
-const ws = createWriteStream(csvPathHints);
-// Optionally, pick specific fields to export
-writeToStream(ws, alias, {
-  headers: true,
-  delimiter: ";",
-  quote: '"',
-  escape: '"',
-}).on("finish", () => {
-  console.log("CSV file written successfully.");
-});
 const finalQuestion = await prisma.finalQuestion.findFirst();
 
 const user = Astro.cookies.get("session")?.value;
