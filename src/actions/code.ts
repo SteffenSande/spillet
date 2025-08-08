@@ -25,7 +25,7 @@ export const codeActions = {
           data: {
             aliasId: alias.id,
             codesId: code.id,
-            isCorrect: code.code === input.code,
+            isCorrect: code.code === input.code.toLowerCase(),
           },
         });
         if (guess.isCorrect) {

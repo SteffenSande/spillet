@@ -29,7 +29,7 @@ const Assignment: React.FunctionComponent<IProps> = ({
 
   return <div className='flex items-center gap-4'>
     <FaTimes />
-    <p>"Ikke funnet"</p>
+    <p>Ikke funnet</p>
   </div>
 };
 

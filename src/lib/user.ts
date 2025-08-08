@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import type { ICode, PublicUser, Team, User, Votes } from "./types";
+import type { Game, ICode, PublicUser, Team, User, Votes } from "./types";
 
 export const getUserWithAllCodes = async (
   aliasId: string
@@ -26,6 +26,14 @@ export const getUserWithAllCodes = async (
   };
 
   return user;
+};
+
+export const getGame = async (): Promise<Game> => {
+  const gameDb = await prisma.games.findFirstOrThrow();
+  return {
+    intro: gameDb.intro,
+    rules: gameDb.rules,
+  };
 };
 
 export const getVotes = async (aliasId: string): Promise<Votes> => {

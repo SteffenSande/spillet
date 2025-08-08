@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Intro from "../../components/intro";
+import prisma from "../../lib/prisma";
+
+
+// server
+---
+
+<Layout> <Intro game={game} client:load /></Layout>

@@ -12,11 +12,12 @@ datasource db {
 model games {
   id                       Int     @id @default(autoincrement())
   name                     String
-  description              String  @default("")
   maxGuesses               Int
   nrOfCorrectGuessesToKill Int     @default(2)
   teams                    teams[]
   canFindFinalQuestion     Boolean @default(false)
+  rules                    String
+  intro                    String
 }
 
 model teams {

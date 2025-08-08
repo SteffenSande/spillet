@@ -1,9 +1,8 @@
 import React from 'react';
 import Layout from '../Layout/Layout';
-import type { IFinalQuestion, User } from '../../lib/types';
+import type { Game, IFinalQuestion, User } from '../../lib/types';
 import { ExpandableCard } from '../utils/Expandable';
 import SvgMafiaGrande from '../images/MafiaGrande';
-import type { FinalQuestion } from '../../generated/prisma/client';
 
 declare global {
   interface Window {
@@ -13,12 +12,13 @@ declare global {
 
 export interface IProps {
   you?: User
+  game?: Game
   finalQuestion?: IFinalQuestion
 }
 
-const Home: React.FunctionComponent<IProps> = ({ you, finalQuestion }) => {
+const Home: React.FunctionComponent<IProps> = ({ game, you, finalQuestion }) => {
 
-  if (!you) {
+  if (!you || !game) {
     return <Layout>
       You need to scan your alias!
     </Layout>
@@ -28,6 +28,12 @@ const Home: React.FunctionComponent<IProps> = ({ you, finalQuestion }) => {
     <SvgMafiaGrande className='w-3/4 absolute -top-72 -z-10' />
     <div className='h-60' />
     <h1 className='text-3xl'>{you.name}</h1>
+    <ExpandableCard title='Intro'>
+      <p style={{ 'whiteSpace': 'pre-line' }}>{game.intro}</p>
+    </ExpandableCard>
+    <ExpandableCard title='Regler'>
+      <p style={{ 'whiteSpace': 'pre-line' }}>{game.rules}</p>
+    </ExpandableCard>
     <ExpandableCard title='Beskrivelse'>
       <p style={{ 'whiteSpace': 'pre-line' }}>{you.description}</p>
     </ExpandableCard>

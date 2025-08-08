@@ -10,9 +10,61 @@ export async function main() {
     data: {
       name: "Leon 11",
       maxGuesses: 1,
-      description: "Noe du sent vil glemme",
+      rules: ` 🛠 Praktisk informasjon
+For å finne øyet må du samle hint.
+Hintene er skjult bak QR-koder spredt rundt i huset. Når du finner en QR-kode, scanner du den med mobilen og kommer til en nettside med en oppgave. Løser du oppgaven riktig, får du et hint – som vil hjelpe deg i jakten på øyet.
+Det finnes totalt 12 hintoppgaver, og du trenger flere av dem for å finne øyet.
+
+❗ Regler og rammer:
+• Rom som ikke er en del av spillet er: Berit og Brage sitt rom, kjelleren og Aria sitt rom. Gå ikke inn der.
+• Du må ikke ødelegge, flytte på eller rote i huset – det du leter etter er smart plassert, ikke skjult bak bilder eller sokkelister.
+• Etterlat alle rom slik du fant dem, så får alle en fair sjanse.
+• Du kan samarbeide, men spør deg selv: Stoler du på dem? Kanskje dere egentlig har ulike mål.
+
+🧩 Hemmelig informasjon
+Alle har fått utdelt hemmelig informasjon.
+Det kan hjelpe deg med å:
+• Finne hint.
+• Forstå hvem du bør samarbeide med.
+• Avsløre gruppetilhørigheten til andre.
+• Velg selv hvor mye du er villig til å dele med andre.
+• Det er ikke lov å be om å få se andres hemmelige informasjon eller vise sin egen.
+
+
+🎯 Avsløring og eliminering
+Hver spiller kan en gang i løpet av spillet gjette hvilken gruppe en annen deltaker tilhører.
+• Hvis to forskjellige spillere gjetter riktig på samme person, er den personen ute av spillet – og mister muligheten til å påvirke øyets skjebne.
+• Gjetter du feil, skjer det ingenting – men du har brukt opp ett av dine tre forsøk.
+
+🏆 Vinner
+Alle gjenlevende deltakere på laget som først finner øyet er å anse som vinnere.
+Det er derfor i din interesse å:
+• Holde deg i live
+• Finne ut hvem som er på ditt lag
+• Få tak i øyet før de andre
+
+🧠 Husk:
+Den som finner øyet, bestemmer hva som skjer.
+Men ingen kan vinne alene. Og ingen er trygge.
+`,
+      intro: `🎭 Velkommen til Villa Leone – et kveldsmøte i kunstens og maktens navn.
+Dere er samlet i kveld etter en eksklusiv invitasjon fra den karismatiske – og etter hvert omdiskuterte – kunstsamleren Olav W. Lehne. Etter mange år i det skjulte har Olav nå åpnet dørene til Villa Leone, hans private residens, for en intim gruppe av spesielt utvalgte gjester.
+
+Anledningen? En spektakulær avsløring: Athenas Øye – en juvellignende artefakt av uvanlig skjønnhet og ukjent opprinnelse. Ifølge Olav ble Øyet “oppdaget” ved en tilfeldighet i kjelleren til en bygning han nylig overtok i Toscana. Det er nå satt i en glassmonter midt i Villaens salong, omgitt av vakthold og diskusjon.
+
+Men gjenstanden har allerede skapt uro.
+
+Eksperter mener det dreier seg om en hellenistisk relikvie som forsvant under uklare omstendigheter etter andre verdenskrig. En etterlysning fra Museet for Bysantinsk Kultur i Thessaloniki hevder at Øyet ble stjålet i 1948, og at det med sikkerhet tilhører museet og dermed den greske staten. Dette har ikke hindret Olav i å kalle det “høydepunktet i sin samling”.
+
+De fleste her kjenner Olav godt – og mange kjenner hverandre fra før, både sosialt og gjennom kunstmiljøet. Det er nettopp derfor dere er her: Olav stoler på dere.
+
+Men kan han egentlig det?
+
+For uansett relasjon eller bakgrunn, har alle som er til stede forberedt seg. Det ryktes om både sannsynlige og usannsynlige allianser – og én ting er sikkert:
+Alle har egne planer for Athenas Øye.`,
     },
   });
+
   const teite = await prisma.teams.create({
     data: {
       name: "Returnere",
@@ -22,7 +74,7 @@ export async function main() {
 
   const copier = await prisma.teams.create({
     data: {
-      name: "Lage kopier",
+      name: "Selge",
       gamesId: game.id,
     },
   });
@@ -36,7 +88,7 @@ export async function main() {
 
   const destroyer = await prisma.teams.create({
     data: {
-      name: "Ødelegger",
+      name: "Ødelegge",
       gamesId: game.id,
     },
   });
@@ -135,7 +187,7 @@ export async function main() {
           trim: true,
         })
       )
-      .on("data", (row) => hints.push(row))
+      .on("data", (row) => finalQuestions.push(row))
       .on("end", resolve)
       .on("error", reject);
   });
@@ -143,7 +195,6 @@ export async function main() {
   const finalQuestionsFiltered = finalQuestions.filter(
     (question) => question.assignment
   );
-
   // Seed data
   for (const row of finalQuestionsFiltered) {
     try {
@@ -196,7 +247,7 @@ interface Hint {
 
 interface FinalQuesiton {
   id: number;
-  code: string;
   externalId: string;
+  code: string;
   assignment: string;
 }

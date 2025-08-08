@@ -1,3 +1,8 @@
+export interface Game {
+  intro: string;
+  rules: string;
+}
+
 export interface User {
   name: string;
   description: string;

@@ -1,9 +1,10 @@
 ---
 // server
+import { getJSDocAugmentsTag } from "typescript";
 import Home from "../components/Home";
 import Layout from "../layouts/Layout.astro";
 import prisma from "../lib/prisma";
-import { getUserWithAllCodes } from "../lib/user";
+import { getGame, getUserWithAllCodes } from "../lib/user";
 
 const user = Astro.cookies.get("session")?.value;
 let temp;
@@ -29,11 +30,13 @@ try {
 } catch (e) {}
 
 let you;
+let game;
 if (user) {
   you = await getUserWithAllCodes(user);
+  game = await getGame();
 }
 ---
 
 <Layout>
-  <Home you={you} finalQuestion={temp} client:load />
+  <Home you={you} finalQuestion={temp} game={game} client:load />
 </Layout>
