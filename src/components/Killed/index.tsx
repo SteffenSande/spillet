@@ -10,10 +10,11 @@ declare global {
 }
 
 export interface IProps {
+  gameId: number
 }
 
-const Killed: React.FunctionComponent<IProps> = ({ }) => {
-  return <Layout>
+const Killed: React.FunctionComponent<IProps> = ({ gameId }) => {
+  return <Layout gameId={gameId}>
     <SvgMafiaGrande className='w-3/4 absolute -top-72 -z-10' />
     <div className='h-60' />
     <p>Du er ute av spillet da 2 andre deltagere har gjettet ditt lag.</p>

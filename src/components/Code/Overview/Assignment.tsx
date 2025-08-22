@@ -1,13 +1,15 @@
 import React from 'react';
-import type { ICode } from '../../../lib/types';
+import type { ICodeOverview } from '../../../lib/types';
 import { FaCheck, FaSearch, FaTimes } from 'react-icons/fa';
 
 export interface IProps {
-  code: ICode
+  gameId: number,
+  code: ICodeOverview
 }
 
 const Assignment: React.FunctionComponent<IProps> = ({
-  code
+  code,
+  gameId
 }) => {
   const foundNotSolved = code.assignment && !code.hint
   const solved = code.hint
@@ -17,7 +19,7 @@ const Assignment: React.FunctionComponent<IProps> = ({
       <FaSearch />
       <div className='flex gap-4 flex-col'>
         <p>{code.assignment}</p>
-        <a href={`/code/${code.externalId}`}>Gå til opppgave</a>
+        <a href={`/${gameId}/code/${code.externalId}`}>Gå til opppgave</a>
       </div>
     </div >
   }

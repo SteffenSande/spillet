@@ -10,14 +10,22 @@ datasource db {
 }
 
 model games {
-  id                       Int     @id @default(autoincrement())
+  id                       Int                @id @default(autoincrement())
   name                     String
   maxGuesses               Int
-  nrOfCorrectGuessesToKill Int     @default(2)
+  nrOfCorrectGuessesToKill Int                @default(2)
   teams                    teams[]
-  canFindFinalQuestion     Boolean @default(false)
+  canFindFinalQuestion     Boolean            @default(false)
   rules                    String
   intro                    String
+  extraInformation         extraInformation[]
+}
+
+model extraInformation {
+  id      Int    @id @default(autoincrement())
+  text    String
+  games   games? @relation(fields: [gamesId], references: [id])
+  gamesId Int?
 }
 
 model teams {
@@ -36,8 +44,8 @@ model Alias {
   name               String
   description        String               @default("")
   hiddenDescription  String?
-  teams              teams                @relation(fields: [teamsId], references: [id])
   teamsId            Int
+  teams              teams                @relation(fields: [teamsId], references: [id])
   CodesGuess         CodesGuess[]
   guessesMade        AliasGuesses[]       @relation("guess")
   guesses            AliasGuesses[]       @relation("guesser")
@@ -45,6 +53,7 @@ model Alias {
   alive              Boolean              @default(true)
   FinalQuestionGuess FinalQuestionGuess[]
   FinalFound         FinalFound[]
+  RateLimit          RateLimit[]
 }
 
 model AliasGuesses {
@@ -60,11 +69,12 @@ model AliasGuesses {
 
 model Codes {
   id         Int          @id @default(autoincrement())
-  code       String
   CodesGuess CodesGuess[]
   externalId String       @unique @default(uuid())
+  imagePath  String?
+  code       String
   hint       String
-  assignment String       @db.Text
+  assignment String
   CodeFound  CodeFound[]
 }
 
@@ -110,4 +120,15 @@ model FinalFound {
   finalQuestionId Int
   alias           Alias         @relation(fields: [aliasId], references: [id])
   aliasId         Int
+}
+
+model RateLimit {
+  id         String   @id @default(uuid())
+  actionName String
+  lastAccess DateTime
+
+  alias   Alias @relation(fields: [aliasId], references: [id])
+  aliasId Int
+
+  @@unique([aliasId, actionName])
 }

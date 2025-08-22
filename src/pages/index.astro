@@ -1,42 +1,18 @@
 ---
-// server
-import { getJSDocAugmentsTag } from "typescript";
-import Home from "../components/Home";
 import Layout from "../layouts/Layout.astro";
 import prisma from "../lib/prisma";
-import { getGame, getUserWithAllCodes } from "../lib/user";
+// server
 
-const user = Astro.cookies.get("session")?.value;
-let temp;
-
-try {
-  const game = await prisma.games.findFirst();
-  await prisma.finalFound.findFirstOrThrow({
-    where: {
-      alias: {
-        externalId: user,
-      },
-    },
-  });
-  const finalQuestion = await prisma.finalQuestion.findFirst();
-  temp =
-    game?.canFindFinalQuestion && finalQuestion
-      ? {
-          externalId: finalQuestion.externalId,
-          assignment: finalQuestion.assignment,
-          codeLength: finalQuestion.code.length,
-        }
-      : undefined;
-} catch (e) {}
-
-let you;
-let game;
-if (user) {
-  you = await getUserWithAllCodes(user);
-  game = await getGame();
-}
+const games = await prisma.games.findMany();
+console.log(games);
 ---
 
 <Layout>
-  <Home you={you} finalQuestion={temp} game={game} client:load />
+  <div class="grid lg:grid-cols-4 p-4 justify-center">
+    {
+      games.map((game) => {
+        return <a href={`/${game.id}/admin`}> {game.name} </a>;
+      })
+    }
+  </div>
 </Layout>

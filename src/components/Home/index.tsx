@@ -12,19 +12,19 @@ declare global {
 
 export interface IProps {
   you?: User
+  gameId: number
   game?: Game
   finalQuestion?: IFinalQuestion
 }
 
-const Home: React.FunctionComponent<IProps> = ({ game, you, finalQuestion }) => {
-
+const Home: React.FunctionComponent<IProps> = ({ gameId, game, you, finalQuestion }) => {
   if (!you || !game) {
-    return <Layout>
+    return <Layout gameId={gameId}>
       You need to scan your alias!
     </Layout>
   }
 
-  return <Layout>
+  return <Layout gameId={gameId}>
     <SvgMafiaGrande className='w-3/4 absolute -top-72 -z-10' />
     <div className='h-60' />
     <h1 className='text-3xl'>{you.name}</h1>
@@ -34,6 +34,11 @@ const Home: React.FunctionComponent<IProps> = ({ game, you, finalQuestion }) => 
     <ExpandableCard title='Regler'>
       <p style={{ 'whiteSpace': 'pre-line' }}>{game.rules}</p>
     </ExpandableCard>
+    {game.extraInformation.length > 0 && <ExpandableCard title='Ekstra informasjon'>
+      {game.extraInformation.map((info, i) => {
+        return <p style={{ 'whiteSpace': 'pre-line' }}>{info}</p>
+      })}
+    </ExpandableCard>}
     <ExpandableCard title='Beskrivelse'>
       <p style={{ 'whiteSpace': 'pre-line' }}>{you.description}</p>
     </ExpandableCard>
@@ -41,9 +46,9 @@ const Home: React.FunctionComponent<IProps> = ({ game, you, finalQuestion }) => 
       <h3>Lag: {you.team}</h3>
       <p style={{ 'whiteSpace': 'pre-line' }}>{you.hiddenDescription}</p>
     </ExpandableCard>
-    <a href='/code/overview'>Se oppgaver og hint</a>
-    <a href='/alias'>Se oversikt og anklag en konkurent for å jobbe for et annet lag</a>
-    {finalQuestion && <a href={`/finalQuestion/${finalQuestion.externalId}`}>Du har funnet koden, trykk her for å løse den</a>}
+    <a href={`/${gameId}/code/overview`}>Se oppgaver og hint</a>
+    <a href={`/${gameId}/alias`}>Se oversikt og anklag en konkurent for å jobbe for et annet lag</a>
+    {finalQuestion && <a href={`/${gameId}/finalQuestion/${finalQuestion.externalId}`}>Du har funnet koden, trykk her for å løse den</a>}
   </Layout>
 
 };

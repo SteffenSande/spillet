@@ -1,5 +1,14 @@
 import prisma from "./prisma";
-import type { Game, ICode, PublicUser, Team, User, Votes } from "./types";
+import type {
+  Game,
+  ICode,
+  ICodeOverview,
+  IFinalQuestion,
+  PublicUser,
+  Team,
+  User,
+  Votes,
+} from "./types";
 
 export const getUserWithAllCodes = async (
   aliasId: string
@@ -28,11 +37,51 @@ export const getUserWithAllCodes = async (
   return user;
 };
 
-export const getGame = async (): Promise<Game> => {
-  const gameDb = await prisma.games.findFirstOrThrow();
+export const getFinalQuestion = async (
+  user: string,
+  gameId: number
+): Promise<IFinalQuestion | undefined> => {
+  try {
+    await prisma.finalFound.findFirstOrThrow({
+      where: {
+        alias: {
+          externalId: user,
+        },
+      },
+    });
+  } catch (e) {
+    return undefined;
+  }
+  const game = await prisma.games.findFirst({
+    where: {
+      id: gameId,
+    },
+  });
+
+  const finalQuestion = await prisma.finalQuestion.findFirst();
+
+  return game?.canFindFinalQuestion && finalQuestion
+    ? {
+        externalId: finalQuestion.externalId,
+        assignment: finalQuestion.assignment,
+        codeLength: finalQuestion.code.length,
+      }
+    : undefined;
+};
+
+export const getGame = async (id: number): Promise<Game> => {
+  const gameDb = await prisma.games.findFirstOrThrow({
+    where: {
+      id: id,
+    },
+    include: {
+      extraInformation: true,
+    },
+  });
   return {
     intro: gameDb.intro,
     rules: gameDb.rules,
+    extraInformation: gameDb.extraInformation.map((info) => info.text),
   };
 };
 
@@ -155,7 +204,9 @@ export const getPublicUsersWithoutUser = async (
   return aliases;
 };
 
-export const getCodesForUser = async (aliasId: string): Promise<ICode[]> => {
+export const getCodesForUser = async (
+  aliasId: string
+): Promise<ICodeOverview[]> => {
   const allCodes = await prisma.codes.findMany();
 
   // Fetch all guesses made by this alias
@@ -198,7 +249,7 @@ export const getCodesForUser = async (aliasId: string): Promise<ICode[]> => {
   }
 
   // Build codes array with conditional fields
-  const codes: ICode[] = allCodes.map((code) => {
+  const codes: ICodeOverview[] = allCodes.map((code) => {
     const guessInfo = codeGuesses.get(code.id) ?? {
       correct: false,
     };
@@ -213,7 +264,9 @@ export const getCodesForUser = async (aliasId: string): Promise<ICode[]> => {
       ...(guessInfo.correct && { hint: code.hint }),
     };
   });
-  return codes;
+  return codes.sort((a, b) => {
+    return (b.hint ? 1 : 0) - (a.hint ? 1 : 0);
+  });
 };
 
 export const isDead = async (user: string): Promise<Boolean> => {

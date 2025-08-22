@@ -1,6 +1,7 @@
 export interface Game {
   intro: string;
   rules: string;
+  extraInformation: string[];
 }
 
 export interface User {
@@ -8,7 +9,7 @@ export interface User {
   description: string;
   team: string;
   hiddenDescription: string;
-  codes: ICode[];
+  codes: ICodeOverview[];
 }
 
 export interface ICode {
@@ -16,7 +17,14 @@ export interface ICode {
   externalId: string;
   hint?: string;
   assignment: string;
+  imagePath?: string;
   length: number;
+}
+
+export interface ICodeOverview {
+  externalId?: string;
+  hint?: string;
+  assignment?: string;
 }
 
 export interface IFinalQuestion {

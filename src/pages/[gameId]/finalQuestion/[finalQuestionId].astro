@@ -1,13 +1,16 @@
 ---
 // server
-import FinalQuestion from "../../components/finalQuestion";
-import FinalQuestionNotFound from "../../components/finalQuestion/FinalQuestionNotFound";
-import Layout from "../../layouts/Layout.astro";
-import prisma from "../../lib/prisma";
-import { type IFinalQuestion, type Team } from "../../lib/types";
+import FinalQuestion from "../../../components/finalQuestion";
+import FinalQuestionNotFound from "../../../components/finalQuestion/FinalQuestionNotFound";
+import Layout from "../../../layouts/Layout.astro";
+import { getGameId } from "../../../lib/params";
+import prisma from "../../../lib/prisma";
+import type { IFinalQuestion, Team } from "../../../lib/types";
 const { finalQuestionId } = Astro.params;
 
-const user = Astro.cookies.get("session")?.value;
+const gameId = getGameId(Astro);
+
+const user = Astro.cookies.get("session-mafia-grande")?.value;
 let winnerTeam: Team | undefined;
 let question: IFinalQuestion | undefined;
 if (finalQuestionId && user) {
@@ -23,9 +26,9 @@ if (finalQuestionId && user) {
       codeLength: finalQuestion.code.length,
       externalId: finalQuestion.externalId,
     };
-    const hasCorrectAnswer = await prisma.finalQuestionGuess.findFirst({
+    const isSolved = await prisma.finalQuestionGuess.findFirst({
       where: {
-        id: finalQuestion.id,
+        finalQuestionId: finalQuestion.id,
         isCorrect: true,
       },
       include: {
@@ -37,7 +40,7 @@ if (finalQuestionId && user) {
       },
     });
 
-    if (!hasCorrectAnswer) {
+    if (!isSolved) {
       const alias = await prisma.alias.findFirstOrThrow({
         where: { externalId: user },
       });
@@ -58,10 +61,11 @@ if (finalQuestionId && user) {
         });
       }
     } else {
-      winnerTeam = hasCorrectAnswer.alias.teams;
+      winnerTeam = isSolved.alias.teams;
     }
   }
 }
+
 const teams = await prisma.teams.findMany();
 const games = await prisma.games.findFirst();
 
@@ -72,6 +76,7 @@ export const prerender = false;
   {
     games?.canFindFinalQuestion && (
       <FinalQuestion
+        gameId={gameId}
         finalQuestion={question}
         teams={teams}
         initWinnerTeam={winnerTeam}
@@ -79,5 +84,9 @@ export const prerender = false;
       />
     )
   }
-  {!games?.canFindFinalQuestion && <FinalQuestionNotFound client:load />}
+  {
+    !games?.canFindFinalQuestion && (
+      <FinalQuestionNotFound gameId={gameId} client:load />
+    )
+  }
 </Layout>

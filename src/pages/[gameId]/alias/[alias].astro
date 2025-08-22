@@ -1,8 +1,10 @@
 ---
 // server
-import Profile from "../../components/Alias";
-import Layout from "../../layouts/Layout.astro";
-import prisma from "../../lib/prisma";
+import Profile from "../../../components/Alias";
+import Layout from "../../../layouts/Layout.astro";
+import { getGameId } from "../../../lib/params";
+import prisma from "../../../lib/prisma";
+const gameId = getGameId(Astro);
 const { alias } = Astro.params;
 let you;
 
@@ -18,7 +20,7 @@ if (alias) {
     });
     if (temp) {
       you = temp;
-      Astro.cookies.set("session", you.externalId, {
+      Astro.cookies.set("session-mafia-grande", you.externalId, {
         path: "/",
       });
     }
@@ -31,5 +33,5 @@ export const prerender = false;
 ---
 
 <Layout>
-  <Profile alias={you} client:load />
+  <Profile gameId={gameId} alias={you} client:load />
 </Layout>

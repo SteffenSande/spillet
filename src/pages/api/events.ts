@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ request }) => {
       return [key, value];
     })
   );
-  const user = cookies["session"];
+  const user = cookies["session-mafia-grande"];
 
   const stream = new ReadableStream({
     start(controller) {

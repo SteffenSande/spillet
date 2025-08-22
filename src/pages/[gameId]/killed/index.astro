@@ -1,0 +1,9 @@
+---
+import Killed from "../../../components/Killed";
+import Layout from "../../../layouts/Layout.astro";
+import { getGameId } from "../../../lib/params";
+
+const gameId = getGameId(Astro);
+---
+
+<Layout> <Killed gameId={gameId} client:load /></Layout>

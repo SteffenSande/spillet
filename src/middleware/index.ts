@@ -6,10 +6,10 @@ import { isDead } from "../lib/user";
 // `context` and `next` are automatically typed
 export const auth = defineMiddleware(async (context, next) => {
   try {
-    const loggedIn = context.cookies.has("session");
+    const loggedIn = context.cookies.has("session-mafia-grande");
 
     if (loggedIn) {
-      const idToken = context.cookies.get("session")?.value;
+      const idToken = context.cookies.get("session-mafia-grande")?.value;
       if (idToken) context.locals.user = idToken;
     } else {
       // Redirect to home and tell them to log in by scanning again.

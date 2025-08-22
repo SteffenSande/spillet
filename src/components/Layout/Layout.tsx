@@ -8,10 +8,11 @@ import Cookies from 'js-cookie';
 import HomeButton from './HomeButton';
 
 export interface IProps {
+  gameId: number,
   children: React.ReactNode
 }
 
-const Layout: React.FunctionComponent<IProps> = ({ children }) => {
+const Layout: React.FunctionComponent<IProps> = ({ children, gameId }) => {
   const { serverAction } = useServerActions();
   React.useEffect(() => {
     if (serverAction?.type === "hint") {
@@ -23,11 +24,11 @@ const Layout: React.FunctionComponent<IProps> = ({ children }) => {
   }, [serverAction])
 
   React.useEffect(() => {
-    const user = Cookies.get("session");
+    const user = Cookies.get("session-mafia-grande");
     if (!user) {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        Cookies.set('session', storedUser);
+        Cookies.set('session-mafia-grande', storedUser);
         window.location.reload();
       }
     }
@@ -38,7 +39,7 @@ const Layout: React.FunctionComponent<IProps> = ({ children }) => {
   >
     <div className='p-4 flex flex-col gap-4 w-full'>
       <nav>
-        <HomeButton></HomeButton>
+        <HomeButton gameId={gameId}></HomeButton>
       </nav>
       <div className='flex items-center flex-col w-full gap-4'>
         {children}

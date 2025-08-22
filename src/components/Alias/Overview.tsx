@@ -6,12 +6,14 @@ import { actions } from 'astro:actions';
 import { FaSkullCrossbones } from 'react-icons/fa';
 
 export interface IProps {
+  gameId: number,
   publicUsers?: PublicUser[]
   teams?: Team[]
   votes?: Votes
 }
 
 const AliasOverview: React.FunctionComponent<IProps> = ({
+  gameId,
   publicUsers,
   teams,
   votes
@@ -21,7 +23,7 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
   if (!publicUsers || !teams || !votes) {
     return <>This shouldn't happen. Talk to Steffen.</>
   };
-  return <Layout>
+  return <Layout gameId={gameId}>
     <>
       <h3>Stemmer: {votes.used}/{votes.max}</h3>
       {publicUsers.map(user => {
@@ -61,6 +63,7 @@ const AliasOverview: React.FunctionComponent<IProps> = ({
         </ExpandableCard>
       })}
     </>
+
   </Layout >
 };
 

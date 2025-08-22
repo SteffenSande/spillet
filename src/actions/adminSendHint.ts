@@ -22,18 +22,19 @@ export const hints = {
     },
   }),
   send: defineAction({
-    input: z.string(),
-    handler: async (input: string, context) => {
+    input: z.object({
+      text: z.string(),
+      user: z.string(),
+    }),
+    handler: async (input: { user: string; text: string }) => {
       try {
-        const user = context.locals.user;
-        if (user)
-          send(
-            {
-              type: "hint",
-              message: input,
-            },
-            user
-          );
+        send(
+          {
+            type: "hint",
+            message: input.text,
+          },
+          input.user
+        );
       } catch (e) {
         console.error(e);
       }

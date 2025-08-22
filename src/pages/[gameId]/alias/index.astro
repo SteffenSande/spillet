@@ -1,0 +1,32 @@
+---
+import AliasOverview from "../../../components/Alias/Overview";
+import Layout from "../../../layouts/Layout.astro";
+import { getGameId } from "../../../lib/params";
+import {
+  getPublicUsersWithoutUser,
+  getTeams,
+  getVotes,
+} from "../../../lib/user";
+
+const gameId = getGameId(Astro);
+const user = Astro.cookies.get("session-mafia-grande")?.value;
+
+let publicUsers;
+let teams;
+let votes;
+if (user) {
+  publicUsers = await getPublicUsersWithoutUser(user);
+  teams = await getTeams(user);
+  votes = await getVotes(user);
+}
+---
+
+<Layout>
+  <AliasOverview
+    gameId={gameId}
+    votes={votes}
+    publicUsers={publicUsers}
+    teams={teams}
+    client:only
+  />
+</Layout>

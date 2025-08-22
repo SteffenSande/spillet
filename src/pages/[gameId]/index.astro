@@ -1,0 +1,24 @@
+---
+// server
+import Home from "../../components/Home";
+import Layout from "../../layouts/Layout.astro";
+import { getGameId, getUser } from "../../lib/params";
+import { getFinalQuestion, getGame, getUserWithAllCodes } from "../../lib/user";
+
+const gameId = getGameId(Astro);
+const user = getUser(Astro);
+
+const you = await getUserWithAllCodes(user);
+const game = await getGame(gameId);
+const finalQuestion = await getFinalQuestion(user, gameId);
+---
+
+<Layout>
+  <Home
+    gameId={gameId}
+    you={you}
+    finalQuestion={finalQuestion}
+    game={game}
+    client:load
+  />
+</Layout>

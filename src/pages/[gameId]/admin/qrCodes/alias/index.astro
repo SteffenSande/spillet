@@ -1,0 +1,46 @@
+---
+import Layout from "../../../../../layouts/Layout.astro";
+import { getGameId } from "../../../../../lib/params";
+import prisma from "../../../../../lib/prisma";
+import { generateQrCode } from "../../../../../lib/QRCode";
+import { writeToStream } from "fast-csv";
+import { createWriteStream } from "fs";
+import path from "path";
+
+const gameId = getGameId(Astro);
+const aliases = await prisma.alias.findMany();
+
+const qrCodes = await Promise.all(
+  aliases.map(async (alias) => {
+    return await generateQrCode(
+      `https://mafiagrande.no/${gameId}/alias/${alias.externalId}`
+    );
+  })
+);
+
+// const csvPathHints = path.join(process.cwd(), "data", "updatedAlias.csv");
+// const ws = createWriteStream(csvPathHints);
+// // Optionally, pick specific fields to export
+// writeToStream(ws, aliases, {
+//   headers: true,
+//   delimiter: ";",
+//   quote: '"',
+// }).on("finish", () => {
+//   console.log("CSV file written successfully.");
+// });
+---
+
+<Layout>
+  <div class="bg-white text-black grid grid-cols-3">
+    {
+      qrCodes.map((qrCode: string, i) => {
+        return (
+          <div class="">
+            <h3>{aliases[i].name}</h3>
+            <img class="w-32 h-32" src={qrCode} />
+          </div>
+        );
+      })
+    }
+  </div>
+</Layout>

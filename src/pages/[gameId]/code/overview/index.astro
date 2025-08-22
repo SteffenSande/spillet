@@ -1,0 +1,20 @@
+---
+import CodeOverview from "../../../../components/Code/Overview";
+import Layout from "../../../../layouts/Layout.astro";
+import { getGameId } from "../../../../lib/params";
+import { getCodesForUser } from "../../../../lib/user";
+
+// server
+
+const gameId = getGameId(Astro);
+const user = Astro.cookies.get("session-mafia-grande")?.value;
+
+let codes;
+if (user) {
+  codes = await getCodesForUser(user);
+}
+---
+
+<Layout>
+  <CodeOverview gameId={gameId} codes={codes} client:only />
+</Layout>

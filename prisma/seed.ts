@@ -8,15 +8,15 @@ const prisma = new PrismaClient();
 export async function main() {
   const game = await prisma.games.create({
     data: {
-      name: "Leon 11",
+      name: "Hedda 30",
       maxGuesses: 1,
-      rules: ` 🛠 Praktisk informasjon
-For å finne øyet må du samle hint.
-Hintene er skjult bak QR-koder spredt rundt i huset. Når du finner en QR-kode, scanner du den med mobilen og kommer til en nettside med en oppgave. Løser du oppgaven riktig, får du et hint – som vil hjelpe deg i jakten på øyet.
-Det finnes totalt 12 hintoppgaver, og du trenger flere av dem for å finne øyet.
+      rules: `🛠 Praktisk informasjon
+For å finne formelen må du samle hint.
+Hintene er skjult bak QR-koder spredt rundt i huset. Når du finner en QR-kode, scanner du den med mobilen og kommer til en nettside med en oppgave. Løser du oppgaven riktig, får du et hint – som vil hjelpe deg i jakten på formelen.
+Det finnes totalt 17 hintoppgaver, og du trenger flere av dem for å finne formelen.
 
 ❗ Regler og rammer:
-• Rom som ikke er en del av spillet er: Berit og Brage sitt rom, kjelleren og Aria sitt rom. Gå ikke inn der.
+• Rom som ikke er en del av spillet er tydelig merket med skilt. Gå ikke inn der.
 • Du må ikke ødelegge, flytte på eller rote i huset – det du leter etter er smart plassert, ikke skjult bak bilder eller sokkelister.
 • Etterlat alle rom slik du fant dem, så får alle en fair sjanse.
 • Du kan samarbeide, men spør deg selv: Stoler du på dem? Kanskje dere egentlig har ulike mål.
@@ -24,71 +24,61 @@ Det finnes totalt 12 hintoppgaver, og du trenger flere av dem for å finne øyet
 🧩 Hemmelig informasjon
 Alle har fått utdelt hemmelig informasjon.
 Det kan hjelpe deg med å:
-• Finne hint.
-• Forstå hvem du bør samarbeide med.
-• Avsløre gruppetilhørigheten til andre.
-• Velg selv hvor mye du er villig til å dele med andre.
-• Det er ikke lov å be om å få se andres hemmelige informasjon eller vise sin egen.
-
+• Finne hint
+• Forstå hvem du bør samarbeide med
+• Avsløre gruppetilhørigheten til andre
 
 🎯 Avsløring og eliminering
-Hver spiller kan en gang i løpet av spillet gjette hvilken gruppe en annen deltaker tilhører.
-• Hvis to forskjellige spillere gjetter riktig på samme person, er den personen ute av spillet – og mister muligheten til å påvirke øyets skjebne.
+Hver spiller kan opptil tre ganger i løpet av spillet gjette hvilken gruppe en annen deltaker tilhører.
+• Hvis to forskjellige spillere gjetter riktig på samme person, er den personen ute av spillet – og mister muligheten til å påvirke formelens skjebne.
 • Gjetter du feil, skjer det ingenting – men du har brukt opp ett av dine tre forsøk.
 
 🏆 Vinner
-Alle gjenlevende deltakere på laget som først finner øyet er å anse som vinnere.
+Alle gjenlevende deltakere på laget som først finner formelen er å anse som vinnere.
 Det er derfor i din interesse å:
 • Holde deg i live
 • Finne ut hvem som er på ditt lag
-• Få tak i øyet før de andre
+• Få tak i formelen før de andre
 
 🧠 Husk:
-Den som finner øyet, bestemmer hva som skjer.
-Men ingen kan vinne alene. Og ingen er trygge.
-`,
-      intro: `🎭 Velkommen til Villa Leone – et kveldsmøte i kunstens og maktens navn.
-Dere er samlet i kveld etter en eksklusiv invitasjon fra den karismatiske – og etter hvert omdiskuterte – kunstsamleren Olav W. Lehne. Etter mange år i det skjulte har Olav nå åpnet dørene til Villa Leone, hans private residens, for en intim gruppe av spesielt utvalgte gjester.
-
-Anledningen? En spektakulær avsløring: Athenas Øye – en juvellignende artefakt av uvanlig skjønnhet og ukjent opprinnelse. Ifølge Olav ble Øyet “oppdaget” ved en tilfeldighet i kjelleren til en bygning han nylig overtok i Toscana. Det er nå satt i en glassmonter midt i Villaens salong, omgitt av vakthold og diskusjon.
-
-Men gjenstanden har allerede skapt uro.
-
-Eksperter mener det dreier seg om en hellenistisk relikvie som forsvant under uklare omstendigheter etter andre verdenskrig. En etterlysning fra Museet for Bysantinsk Kultur i Thessaloniki hevder at Øyet ble stjålet i 1948, og at det med sikkerhet tilhører museet og dermed den greske staten. Dette har ikke hindret Olav i å kalle det “høydepunktet i sin samling”.
-
-De fleste her kjenner Olav godt – og mange kjenner hverandre fra før, både sosialt og gjennom kunstmiljøet. Det er nettopp derfor dere er her: Olav stoler på dere.
-
-Men kan han egentlig det?
-
-For uansett relasjon eller bakgrunn, har alle som er til stede forberedt seg. Det ryktes om både sannsynlige og usannsynlige allianser – og én ting er sikkert:
-Alle har egne planer for Athenas Øye.`,
+Den som finner formelen, bestemmer hva som skjer.
+Men ingen kan vinne alene. Og ingen er trygge.`,
+      intro: `🎭 Introduksjon til leken
+Velkommen til fest.
+Glassene er fylt, lysene er dempet, og du står midt i en forsamling av både gode venner og mildt sagt uforutsigbare bekjente. Dette er ikke en hvilken som helst bursdag. Dette er samlingspunktet for en gruppe mennesker som – på et eller annet tidspunkt – alle har bidratt til noe større.
+Vertinnen (som kanskje har fått litt for mange idéer opp gjennom årene) har sammen med flere av dere utviklet noe... uvanlig. En formel. Ikke en oppskrift på kake eller cocktails – men en formel med kraft. Den kan påvirke beslutninger. Endre dynamikker. Avsløre sannheter. Eller lyve overbevisende. Alt etter hvordan den brukes.
+Og her kommer problemet:
+Formelen er borte.
+Den er skjult et sted i huset.
+Og alle vil ha den.
+Men ikke alle vil det samme.
+Nå begynner kappløpet.
+Gjennom koder, spor og hint vil dere forsøke å finne frem til formelen før de andre gjør det. Den som først finner den, bestemmer hva som skjer videre. Og akkurat dét... burde bekymre dere alle.
+Spill godt. Stol på ingen.  `,
     },
   });
 
-  const teite = await prisma.teams.create({
+  await prisma.teams.create({
     data: {
-      name: "Returnere",
+      name: "De Uskyldige",
       gamesId: game.id,
     },
   });
-
-  const copier = await prisma.teams.create({
+  await prisma.teams.create({
     data: {
-      name: "Selge",
+      name: "De Grådige",
       gamesId: game.id,
     },
   });
-
-  const patent = await prisma.teams.create({
+  await prisma.teams.create({
     data: {
-      name: "Bevise forfalskning",
+      name: "De Destruktive",
       gamesId: game.id,
     },
   });
-
-  const destroyer = await prisma.teams.create({
+  await prisma.teams.create({
     data: {
-      name: "Ødelegge",
+      name: "De Tvilende",
       gamesId: game.id,
     },
   });

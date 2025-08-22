@@ -1,15 +1,23 @@
 ---
 // server
-import Admin from "../../components/Admin";
-import Layout from "../../layouts/Layout.astro";
-import prisma from "../../lib/prisma";
-import { getUserWithAllCodes } from "../../lib/user";
+import Admin from "../../../components/Admin";
+import Layout from "../../../layouts/Layout.astro";
+import prisma from "../../../lib/prisma";
+import { getUserWithAllCodes } from "../../../lib/user";
+import { getGameId } from "../../../lib/params";
 
+const gameId = getGameId(Astro);
 const codes = await prisma.codes.findMany();
 const alias = await prisma.alias.findMany();
+const game = await prisma.games.findFirstOrThrow({
+  where: { id: gameId },
+  include: {
+    extraInformation: true,
+  },
+});
 const finalQuestion = await prisma.finalQuestion.findFirst();
 
-const user = Astro.cookies.get("session")?.value;
+const user = Astro.cookies.get("session-mafia-grande")?.value;
 
 let you;
 if (user) {
@@ -19,9 +27,12 @@ if (user) {
 
 <Layout>
   <Admin
+    gameId={gameId}
+    game={game}
     codes={codes?.map((code) => {
       return {
         externalId: code.externalId,
+        assignment: code.assignment,
       };
     }) || []}
     alias={alias?.map((item) => {

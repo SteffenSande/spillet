@@ -8,11 +8,12 @@ import ConfettiExplosion from 'react-confetti-explosion';
 
 
 export interface IProps {
+  gameId: number
 }
 
-const FinalQuestionNotFound: React.FunctionComponent<IProps> = ({ }) => {
-  return <Layout>
-    <h1>Øye er dessverre ikke her? Rart, sjekk igjen seinere.</h1>
+const FinalQuestionNotFound: React.FunctionComponent<IProps> = ({ gameId }) => {
+  return <Layout gameId={gameId}>
+    <h1>Formelen er dessverre ikke her enda, men vil dukke opp her seinere.</h1>
   </Layout>
 };
 
