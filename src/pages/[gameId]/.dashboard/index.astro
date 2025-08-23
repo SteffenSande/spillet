@@ -1,0 +1,15 @@
+---
+// server
+import { getDashboardCodes, getDashboardGame } from "@/lib/dashboard";
+import Layout from "../../../layouts/Layout.astro";
+import { getGameId } from "../../../lib/params";
+import Dashboard from "@/components/DashBoard";
+
+const gameId = getGameId(Astro);
+const game = await getDashboardGame(gameId);
+const codes = await getDashboardCodes();
+---
+
+<Layout>
+  <Dashboard game={game} codes={codes} client:load />
+</Layout>

@@ -7,17 +7,21 @@ import { writeToStream } from "fast-csv";
 import { createWriteStream } from "fs";
 import path from "path";
 
+const codes = await prisma.finalQuestion.findMany();
 const gameId = getGameId(Astro);
-const codes = await prisma.codes.findMany();
 
 const qrCodes = await Promise.all(
   codes.map(async (code) => {
     return await generateQrCode(
-      `https://mafiagrande.no/${gameId}/code/${code.externalId}`
+      `https://mafiagrande.no/${gameId}/finalQuestion/${code.externalId}`
     );
   })
 );
-// const csvPathHints = path.join(process.cwd(), "data", "updatedCodes.csv");
+// const csvPathHints = path.join(
+//   process.cwd(),
+//   "data",
+//   "updatedFinalQuestion.csv"
+// );
 // const ws = createWriteStream(csvPathHints);
 // // Optionally, pick specific fields to export
 // writeToStream(ws, codes, {
@@ -36,7 +40,7 @@ const qrCodes = await Promise.all(
         return (
           <div class="">
             <p>{codes[i].assignment}</p>
-            <img class="w-[2cm] h-[2cm]" src={qrCode} />
+            <img class="w-[2.5cm] h-[2.5cm]" src={qrCode} />
           </div>
         );
       })

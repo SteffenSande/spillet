@@ -151,6 +151,7 @@ Spill godt. Stol på ingen.  `,
           hint: row.hint,
           assignment: row.assignment,
           externalId: row.externalId,
+          imagePath: row.imagePath,
         },
       });
     } catch (error) {
@@ -233,6 +234,7 @@ interface Hint {
   externalId: string;
   hint: string;
   assignment: string;
+  imagePath?: string;
 }
 
 interface FinalQuesiton {
