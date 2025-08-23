@@ -43,11 +43,10 @@ export interface IProps {
   }
 }
 
-const Admin: React.FunctionComponent<IProps> = ({ gameId, codes, alias, finalQuestion, game }) => {
-  const [extraInfo, setExtraInfo] = React.useState("");
+const Admin: React.FunctionComponent<IProps> = ({ gameId, game }) => {
 
   return <Layout gameId={gameId}>
-    <h3 className='text-3xl'>Oppgaver:</h3>
+    {/* <h3 className='text-3xl'>Oppgaver:</h3>
     {codes.map((code, i) => {
       return <a key={`code-${i}`} href={`code/${code.externalId}`}>{code.assignment}</a>
     })}
@@ -57,7 +56,7 @@ const Admin: React.FunctionComponent<IProps> = ({ gameId, codes, alias, finalQue
     })}
 
     <h3 className='text-3xl'>FinalQuestion:</h3>
-    <a href={`finalQuestion/${finalQuestion.externalId}`}>final</a>
+    <a href={`finalQuestion/${finalQuestion.externalId}`}>final</a> */}
     {/* <button onClick={async () => {
       await actions.hints.send({
         text: "heisann",

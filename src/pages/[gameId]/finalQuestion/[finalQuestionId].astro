@@ -68,8 +68,6 @@ if (finalQuestionId && user) {
 
 const teams = await prisma.teams.findMany();
 const games = await prisma.games.findFirst();
-
-export const prerender = false;
 ---
 
 <Layout>
